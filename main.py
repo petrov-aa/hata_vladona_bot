@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 
-from hata_vladona.fetcher import fetcher
-from hata_vladona import schema
+from hata_vladona import fetcher
 
-if not schema.is_installed():
-    schema.install()
+if __name__ == '__main__':
 
-fetcher.fetch_next()
+    fetcher.fetch_next()
