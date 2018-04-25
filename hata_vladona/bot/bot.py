@@ -35,8 +35,7 @@ def send_help(message):
 def send_last_image(message):
     image = export.get_latest_image()
     photo = open(image.get_file_path(), 'rb')
-    result = bot.send_photo(message.chat.id, photo)
-    print(result)
+    bot.send_photo(message.chat.id, photo)
 
 
 @bot.message_handler(commands=['yesterday'])
