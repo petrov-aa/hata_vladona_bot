@@ -1,8 +1,7 @@
 from telebot import TeleBot, types
 
-from hata_vladona.bot.configuration import api_token
+from hata_vladona.bot.configuration import api_token, vlad_username
 from hata_vladona import export
-from hata_vladona.configuration import Session
 
 bot = TeleBot(api_token)
 
@@ -10,7 +9,7 @@ bot = TeleBot(api_token)
 @bot.message_handler(commands=['start'])
 def send_help(message):
     bot.send_message(message.chat.id, """
-Наблюдаем за стройкой квартиры Влада в режиме онлайн
+Наблюдаем за стройкой квартиры %s в режиме онлайн
 
 /help - Список команд
 
@@ -18,7 +17,7 @@ def send_help(message):
 
 Contact - @AlexanderPetrov
 Github - https://git.io/vpnaq
-""", disable_web_page_preview=True)
+""" % vlad_username, disable_web_page_preview=True)
 
 
 @bot.message_handler(commands=['help'])

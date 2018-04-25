@@ -1,6 +1,8 @@
+from requests import ReadTimeout
+
 from hata_vladona.bot.bot import bot
 
 if __name__ == '__main__':
 
-    while True:
-        bot.polling()
+    bot.polling(none_stop=True, timeout=9999)
+

@@ -18,4 +18,6 @@ if 'token' not in config['Bot']:
 
 api_token = config['Bot']['token']
 
+vlad_username = config['Bot']['vlad_username'] if 'vlad_username' in config['Bot'] else ''
+
 
