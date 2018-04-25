@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="vds.sh">
+    <serverData>
+      <paths name="Copy of project-level server 'vds.sh'">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/hata_vladona/hata_vladona" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="vds.sh">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/hata_vladona/hata_vladona" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

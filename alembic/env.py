@@ -2,12 +2,12 @@ from __future__ import with_statement
 
 import os
 import sys
-sys.path.append(os.getcwd())
+sys.path.append(os.getcwd())  # THIS is proper workdir to load app modules and configs
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
 
-from hata_vladona.models import * # THIS imports all models from project
+from hata_vladona.models import *  # THIS imports all models from project
 from hata_vladona.configuration import engine_url, Base
 
 # this is the Alembic Config object, which provides

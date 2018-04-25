@@ -54,7 +54,7 @@ def __create_gif(gif_type):
 
     try:
         now = datetime.now()
-        date = datetime(now.year, now.month, now.day, now.hour)
+        date = datetime(now.year, now.month, now.day)
         gif = __check_if_gif_exists(date, gif_type)
         if gif is not None:
             return gif
@@ -72,3 +72,13 @@ def __create_gif(gif_type):
 
 def __check_if_gif_exists(date, gif_type):
     return Session().query(Gif).filter(Gif.date == date, Gif.type == gif_type).first()
+
+
+def get_past_day_gif():
+    """
+
+    :rtype: Gif
+    """
+    now = datetime.now()
+    date = datetime(now.year, now.month, now.day)
+    return __check_if_gif_exists(date, GIF_PAST_DAY)

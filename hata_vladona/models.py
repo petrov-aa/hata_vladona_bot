@@ -47,6 +47,7 @@ class Gif(Base):
     id = Column(Integer, primary_key=True)
     type = Column(String(20))
     date = Column(DateTime)
+    file_id = Column(String(255))
 
     __file_pattern = gif_path + '/%s-%04d-%02d-%02d-%02d.gif'
     __tmp_path = gif_path + '/tmp'
@@ -86,7 +87,8 @@ class Gif(Base):
         image_path = os.path.abspath(Gif.__tmp_path)
         subprocess.call(['convert',
                          '-loop', '1',
-                         '-delay', '0.2',
+                         '-delay', '25',
+                         '-resize', '500x',
                          image_path + '/*.jpg',
                          self.get_file_path()])
         Gif.remove_tmp_dir()
@@ -143,3 +145,8 @@ class Gif(Base):
             current_date = current_date + dt
 
         return result
+
+    def set_file_id(self, file_id):
+        session = Session()
+        self.file_id = file_id
+        session.commit()
