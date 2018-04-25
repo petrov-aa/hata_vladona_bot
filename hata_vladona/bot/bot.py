@@ -1,4 +1,4 @@
-from telebot import TeleBot, types
+from telebot import TeleBot
 
 from hata_vladona.bot.configuration import api_token, vlad_username
 from hata_vladona import export

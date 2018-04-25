@@ -1,5 +1,3 @@
-from requests import ReadTimeout
-
 from hata_vladona.bot.bot import bot
 
 if __name__ == '__main__':
