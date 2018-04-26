@@ -82,13 +82,12 @@ class Gif(Base):
         Gif.create_tmp_dir()
         for image in image_list:
             if os.path.exists(image.get_file_path()):
-                shutil.copyfile(image.get_file_path(), Gif.__tmp_path + '/image%d.jpg' % index)
+                shutil.copyfile(image.get_file_path(), Gif.__tmp_path + '/image%010d.jpg' % index)
                 index += 1
         image_path = os.path.abspath(Gif.__tmp_path)
         subprocess.call(['convert',
                          '-loop', '1',
                          '-delay', '25',
-                         '-resize', '500x',
                          image_path + '/*.jpg',
                          self.get_file_path()])
         Gif.remove_tmp_dir()
