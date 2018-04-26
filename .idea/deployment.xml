@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="vds.sh">
+  <component name="PublishConfigData" serverName="vds.sh hata_vladona_dev">
     <serverData>
       <paths name="Copy of project-level server 'vds.sh'">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/hata_vladona/hata_vladona" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="Copy of project-level server 'vds.sh' (1)">
         <serverdata>
           <mappings>
             <mapping deploy="/home/hata_vladona/hata_vladona" local="$PROJECT_DIR$" web="/" />
@@ -12,7 +19,14 @@
       <paths name="vds.sh">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/hata_vladona/hata_vladona" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/hata_vladona/hata_vladona_dev" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="vds.sh hata_vladona_dev">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/hata_vladona/hata_vladona_dev/" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

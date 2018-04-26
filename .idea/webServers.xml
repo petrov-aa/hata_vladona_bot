@@ -10,6 +10,14 @@
           <option name="port" value="22" />
         </fileTransfer>
       </webServer>
+      <webServer id="23a9bbb3-32c2-4d02-962d-d1053119d615" name="vds.sh hata_vladona_dev" url="http://91.235.137.225">
+        <fileTransfer host="91.235.137.225" port="22" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

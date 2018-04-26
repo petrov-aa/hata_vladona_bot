@@ -2,6 +2,8 @@ from telebot import TeleBot
 
 from hata_vladona.bot.configuration import api_token, vlad_username
 from hata_vladona import export
+from hata_vladona.configuration import Session
+from hata_vladona.models import Camera
 
 bot = TeleBot(api_token)
 
@@ -32,14 +34,18 @@ def send_help(message):
 
 @bot.message_handler(commands=['last'])
 def send_last_image(message):
-    image = export.get_latest_image()
+    session = Session()
+    camera = session.query(Camera).get(3).first()
+    image = export.get_latest_image(camera)
     photo = open(image.get_file_path(), 'rb')
     bot.send_photo(message.chat.id, photo)
 
 
 @bot.message_handler(commands=['yesterday'])
 def send_past_day_gif(message):
-    gif = export.get_past_day_gif()
+    session = Session()
+    camera = session.query(Camera).get(3).first()
+    gif = export.get_past_day_gif(camera)
     document = open(gif.get_file_path(), 'rb')
     result = bot.send_document(message.chat.id, document)
     gif.set_file_id(result.document.file_id)
