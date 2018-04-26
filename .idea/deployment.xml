@@ -19,7 +19,7 @@
       <paths name="vds.sh">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/hata_vladona/hata_vladona_dev" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/hata_vladona/hata_vladona" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

@@ -15,7 +15,7 @@ def __get_current_fetch_date():
     :rtype: datetime
     """
     now = datetime.now()
-    return datetime(2018, 4, 26, 20)
+    return datetime(now.year, now.month, now.day, now.hour)
 
 
 def __get_fetch_url(camera, date):

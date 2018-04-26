@@ -35,7 +35,7 @@ def send_help(message):
 @bot.message_handler(commands=['last'])
 def send_last_image(message):
     session = Session()
-    camera = session.query(Camera).get(3).first()
+    camera = session.query(Camera).get(3)
     image = export.get_latest_image(camera)
     photo = open(image.get_file_path(), 'rb')
     bot.send_photo(message.chat.id, photo)
@@ -44,7 +44,7 @@ def send_last_image(message):
 @bot.message_handler(commands=['yesterday'])
 def send_past_day_gif(message):
     session = Session()
-    camera = session.query(Camera).get(3).first()
+    camera = session.query(Camera).get(3)
     gif = export.get_past_day_gif(camera)
     document = open(gif.get_file_path(), 'rb')
     result = bot.send_document(message.chat.id, document)
