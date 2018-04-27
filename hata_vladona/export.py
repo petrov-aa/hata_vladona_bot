@@ -90,3 +90,21 @@ def get_past_day_gif(camera):
     now = datetime.now()
     date = datetime(now.year, now.month, now.day)
     return __check_if_gif_exists(camera, date, GIF_PAST_DAY)
+
+
+def get_today_images(camera):
+    """
+
+    :rtype: list(Image)
+    :type camera: Camera
+    """
+    return Image.get_today_images(camera)
+
+
+def get_image_by_date(camera, date):
+    """
+
+        :rtype: Image
+        :type camera: Camera
+        """
+    return Image.get_by_date(camera, date)

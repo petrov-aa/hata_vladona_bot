@@ -13,6 +13,8 @@ GIF_PAST_DAY = 'past_day'
 GIF_PAST_WEEK = 'past_week'
 GIF_PAST_MONTH = 'past_month'
 
+CHAT_STATE_WAIT_TIME = 'wait_time'
+
 
 class Image(Base):
 
@@ -43,6 +45,19 @@ class Image(Base):
         session = Session()
         return session.query(Image).filter(Image.camera_id == camera.id,
                                            Image.date == date).first()
+
+    @staticmethod
+    def get_today_images(camera):
+        """
+
+        :rtype: list(Image)
+        :type camera: Camera
+        """
+        session = Session()
+        now = datetime.now()
+        return session.query(Image).\
+            filter(Image.camera_id == camera.id,
+                   Image.date >= datetime(now.year, now.month, now.day)).all()
 
 
 class Gif(Base):
