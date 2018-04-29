@@ -59,6 +59,6 @@ gif_path = config['Gif']['path']
 
 __Session = sessionmaker(bind=engine)
 
-session = Session()
+session = __Session()
 
 Base = declarative_base()
