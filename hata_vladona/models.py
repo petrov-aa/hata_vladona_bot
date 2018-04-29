@@ -81,21 +81,21 @@ class Gif(Base):
         if os.path.isdir(Gif.__tmp_path):
             shutil.rmtree(Gif.__tmp_path)
 
-    @staticmethod
-    def create_gif_dir():
-        if not os.path.isdir(gif_path):
-            os.makedirs(gif_path)
+    def create_gif_dir(self):
+        gif_file_dir = os.path.dirname(self.get_file_path())
+        if not os.path.isdir(gif_file_dir):
+            os.makedirs(gif_file_dir)
 
     def create_file(self):
         image_list = self.get_image_list()
         index = 0
-        Gif.create_gif_dir()
         Gif.create_tmp_dir()
         for image in image_list:
             if os.path.exists(image.get_file_path()):
                 shutil.copyfile(image.get_file_path(), Gif.__tmp_path + '/image%010d.jpg' % index)
                 index += 1
         image_path = os.path.abspath(Gif.__tmp_path)
+        self.create_gif_dir()
         subprocess.call(['convert',
                          '-loop', '1',
                          '-delay', '25',
