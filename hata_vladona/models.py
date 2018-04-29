@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
-from .configuration import Base, Session, gif_path
+from .configuration import Base, session, gif_path
 
 
 GIF_TODAY = 'today'
@@ -40,7 +40,6 @@ class Image(Base):
         :return:
         :rtype: Image
         """
-        session = Session()
         return session.query(Image).filter(Image.camera_id == camera.id,
                                            Image.date == date).first()
 
@@ -160,7 +159,6 @@ class Gif(Base):
         return result
 
     def set_file_id(self, file_id):
-        session = Session()
         self.file_id = file_id
         session.commit()
 

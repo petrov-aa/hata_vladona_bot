@@ -57,6 +57,8 @@ if 'path' not in config['Gif']:
 
 gif_path = config['Gif']['path']
 
-Session = sessionmaker(bind=engine)
+__Session = sessionmaker(bind=engine)
+
+session = Session()
 
 Base = declarative_base()

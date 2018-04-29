@@ -1,5 +1,6 @@
 from sqlalchemy.exc import DatabaseError
 
+import hata_vladona.configuration.session
 from hata_vladona.models import *
 
 
@@ -9,7 +10,6 @@ def get_latest_image(camera):
     :type camera: Camera
     :rtype: Image
     """
-    session = Session()
     return session.query(Image).filter(Image.camera_id == camera.id).order_by(Image.date.desc()).first()
 
 
@@ -47,7 +47,6 @@ def __create_gif(camera, gif_type):
     :type gif_type: str
     :rtype: Gif
     """
-    session = Session()
 
     try:
         now = datetime.now()
@@ -76,7 +75,7 @@ def __check_if_gif_exists(camera, date, gif_type):
     :type date: datetime
     :type gif_type: str
     """
-    return Session().query(Gif).filter(Gif.camera_id == camera.id,
+    return session.query(Gif).filter(Gif.camera_id == camera.id,
                                        Gif.date == date,
                                        Gif.type == gif_type).first()
 
