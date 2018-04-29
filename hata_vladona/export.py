@@ -1,6 +1,6 @@
 from sqlalchemy.exc import DatabaseError
 
-import hata_vladona.configuration.session
+from hata_vladona.configuration import session
 from hata_vladona.models import *
 
 
