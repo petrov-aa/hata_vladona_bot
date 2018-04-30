@@ -3,10 +3,11 @@ import urllib.request
 from datetime import datetime
 from urllib.error import HTTPError, URLError
 
-from hata_vladona.configuration import Session, storage_path, engine_url
+from hata_vladona.config import image_storage_config
+from hata_vladona.database import database
 from hata_vladona.models import Image, Camera
 
-fetch_path_pattern = storage_path + '/%d/%04d-%02d-%02d/%02d.jpg'
+fetch_path_pattern = image_storage_config['path'] + '/%d/%04d-%02d-%02d/%02d.jpg'
 
 
 def __get_current_fetch_date():
@@ -44,7 +45,8 @@ def __check_if_already_fetched(camera, date):
     :type camera: Camera
     :type date: datetime
     """
-    return Session().query(Image).filter(Image.camera_id == camera.id,
+    session = database.get_session()
+    return session.query(Image).filter(Image.camera_id == camera.id,
                                          Image.date == date).first() is not None
 
 
@@ -60,10 +62,9 @@ def __make_storage_dirs(path):
 
 def fetch_next():
 
-    session = Session()
+    session = database.get_session()
 
     try:
-
         cameras = session.query(Camera).all()
 
         for camera in cameras:
@@ -88,9 +89,7 @@ def fetch_next():
             session.add(image)
 
     except (HTTPError, URLError, OSError):
-
         session.rollback()
 
     else:
-
         session.commit()
