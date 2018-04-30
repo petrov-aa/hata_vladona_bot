@@ -53,6 +53,9 @@ if 'Bot' not in config:
 if 'token' not in config['Bot']:
     raise ConfigError('Не задан API TOKEN')
 
+if 'update_method' not in config['Bot']:
+    raise ConfigError('Не задан метод получения сообщений')
+
 if 'vlad_username' not in config['Bot']:
     raise ConfigError('Не задан username Влада')
 
@@ -62,8 +65,17 @@ if 'use_proxy' not in config['Bot']:
 bot_config = {
     'token': config['Bot']['token'],
     'vlad_username': config['Bot']['vlad_username'],
-    'use_proxy': config['Bot']['use_proxy'] != 'no'
+    'use_proxy': config['Bot']['use_proxy'] != 'no',
+    'update_method': config['Bot']['update_method']
 }
+
+if bot_config['update_method'] == 'webhook':
+    if 'webhook_host' not in config['Bot']:
+        raise ConfigError('Не задан webhook-хост')
+    if 'webhook port' not in config['Bot']:
+        raise ConfigError('Не задан webhook-порт')
+    bot_config['webhook_host'] = config['Bot']['webhook_host']
+    bot_config['webhook_port'] = config['Bot']['webhook_port']
 
 proxy_config = {}
 
