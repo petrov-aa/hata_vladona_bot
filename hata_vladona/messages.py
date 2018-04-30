@@ -5,8 +5,9 @@ BOT_START= """
 
 /last - Последнее фото
 
-Contact - @AlexanderPetrov
+Связь - @AlexanderPetrov
 Github - https://git.io/vpnaq
+Поддержать - /donate
 """
 
 BOT_HELP= """
@@ -18,6 +19,9 @@ BOT_HELP= """
 /last - Последнее фото
 /today - Фото за сегодня
 /yesterday - Gif за вчера
+
+/donate - Поддержать проект
+
 """
 
 BOT_CANCEL= """

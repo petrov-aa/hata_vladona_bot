@@ -66,7 +66,8 @@ bot_config = {
     'token': config['Bot']['token'],
     'vlad_username': config['Bot']['vlad_username'],
     'use_proxy': config['Bot']['use_proxy'] != 'no',
-    'update_method': config['Bot']['update_method']
+    'update_method': config['Bot']['update_method'],
+    'donation_url': config['Bot']['donation_url'] if 'donation_url' in config['Bot'] else 'n/a'
 }
 
 if bot_config['update_method'] == 'webhook':

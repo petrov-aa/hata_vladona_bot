@@ -34,7 +34,7 @@ def send_help(message):
         session.add(chat)
         session.commit()
     bot.send_message(message.chat.id,
-                     BOT_START % bot_config['vlad_username'],
+                     BOT_START % (bot_config['vlad_username']),
                      disable_web_page_preview=True)
 
 
@@ -127,6 +127,11 @@ def set_camera_message(message):
     for camera in cameras:
         markup.add(KeyboardButton(camera.name))
     bot.send_message(message.chat.id, BOT_CHOOSE_CAMERA, reply_markup=markup)
+
+
+@bot.message_handler(commands=['donate'])
+def send_donation_link(message):
+    bot.send_message(message.chat.id, bot_config['donation_url'])
 
 
 @bot.message_handler()
