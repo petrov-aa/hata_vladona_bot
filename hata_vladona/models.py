@@ -149,7 +149,10 @@ class Gif(Base):
         elif self.type == GIF_PAST_DAY:
             return date - timedelta(days=1)
         elif self.type == GIF_PAST_WEEK:
-            return date - timedelta(days=7)
+            date = date - timedelta(days=7)
+            if date < self.camera.start_date:
+                return self.camera.start_date
+            return date
         elif self.type == GIF_PAST_MONTH:
             return date - timedelta(days=30)
         else:
@@ -206,5 +209,6 @@ class Camera(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
     url_base = Column(String(255))
+    start_date = Column(DateTime)
     images = relationship('Image', cascade='all, delete-orphan')
     gifs = relationship('Gif', cascade='all, delete-orphan')

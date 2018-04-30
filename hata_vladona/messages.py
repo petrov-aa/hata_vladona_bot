@@ -18,7 +18,7 @@ BOT_HELP= """
 /setcamera - Выбор камеры
 /last - Последнее фото
 /today - Фото за сегодня
-/yesterday - Gif за вчера
+/yesterday - Видео за вчера
 
 /donate - Поддержать проект
 

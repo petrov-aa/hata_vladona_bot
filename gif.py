@@ -6,5 +6,9 @@ if __name__ == '__main__':
     session = database.get_session()
     cameras = session.query(Camera).all()
     for camera in cameras:
+
         gif = export.create_past_day_gif(camera)
+        gif.create_file()
+
+        gif = export.create_past_week_gif(camera)
         gif.create_file()

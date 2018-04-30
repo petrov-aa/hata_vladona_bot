@@ -96,6 +96,17 @@ def get_past_day_gif(camera):
     return __check_if_gif_exists(camera, date, GIF_PAST_DAY)
 
 
+def get_past_week_gif(camera):
+    """
+
+    :type camera: Camera
+    :rtype: Gif
+    """
+    now = datetime.now()
+    date = datetime(now.year, now.month, now.day)
+    return __check_if_gif_exists(camera, date, GIF_PAST_WEEK)
+
+
 def get_today_images(camera):
     """
 
