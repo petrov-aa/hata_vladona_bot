@@ -25,10 +25,10 @@ time_pattern = re.compile('^([0-9]{2}):00$')
 @bot.message_handler(commands=['start'])
 def send_help(message):
     session = database.get_session()
-    chat = session.query(Chat).get(message.chat.id)
+    chat = Chat.get_by_telegram_chat_id(message.chat.id)
     if chat is None:
         chat = Chat()
-        chat.id = message.chat.id
+        chat.telegram_chat_id = message.chat.id
         chat.camera_id = 3
         session.add(chat)
         session.commit()
@@ -40,7 +40,7 @@ def send_help(message):
 @bot.message_handler(commands=['help'])
 def send_help(message):
     session = database.get_session()
-    chat = session.query(Chat).get(message.chat.id)
+    chat = Chat.get_by_telegram_chat_id(message.chat.id)
     if chat is None:
         bot.send_message(message.chat.id, BOT_RESTART)
         return
@@ -50,7 +50,7 @@ def send_help(message):
 @bot.message_handler(commands=['cancel'])
 def send_last_image(message):
     session = database.get_session()
-    chat = session.query(Chat).get(message.chat.id)
+    chat = Chat.get_by_telegram_chat_id(message.chat.id)
     if chat is None:
         bot.send_message(message.chat.id, BOT_RESTART)
         return
@@ -65,7 +65,7 @@ def send_last_image(message):
 @bot.message_handler(commands=['last'])
 def send_last_image(message):
     session = database.get_session()
-    chat = session.query(Chat).get(message.chat.id)
+    chat = Chat.get_by_telegram_chat_id(message.chat.id)
     if chat is None:
         bot.send_message(message.chat.id, BOT_RESTART)
         return
@@ -78,7 +78,7 @@ def send_last_image(message):
 @bot.message_handler(commands=['yesterday'])
 def send_past_day_gif(message):
     session = database.get_session()
-    chat = session.query(Chat).get(message.chat.id)
+    chat = Chat.get_by_telegram_chat_id(message.chat.id)
     if chat is None:
         bot.send_message(message.chat.id, BOT_RESTART)
         return
@@ -109,7 +109,7 @@ def send_past_day_gif(message):
 @bot.message_handler(commands=['week'])
 def send_past_week_gif(message):
     session = database.get_session()
-    chat = session.query(Chat).get(message.chat.id)
+    chat = Chat.get_by_telegram_chat_id(message.chat.id)
     if chat is None:
         bot.send_message(message.chat.id, BOT_RESTART)
         return
@@ -140,7 +140,7 @@ def send_past_week_gif(message):
 @bot.message_handler(commands=['today'])
 def send_today_image_selector(message):
     session = database.get_session()
-    chat = session.query(Chat).get(message.chat.id)
+    chat = Chat.get_by_telegram_chat_id(message.chat.id)
     if chat is None:
         bot.send_message(message.chat.id, BOT_RESTART)
         return
@@ -162,7 +162,7 @@ def send_today_image_selector(message):
 @bot.message_handler(commands=['setcamera'])
 def set_camera_message(message):
     session = database.get_session()
-    chat = session.query(Chat).get(message.chat.id)
+    chat = Chat.get_by_telegram_chat_id(message.chat.id)
     if chat is None:
         bot.send_message(message.chat.id, BOT_RESTART)
         return
@@ -183,7 +183,7 @@ def send_donation_link(message):
 @bot.message_handler()
 def process_message(message):
     session = database.get_session()
-    chat = session.query(Chat).get(message.chat.id)
+    chat = Chat.get_by_telegram_chat_id(message.chat.id)
     if chat is None:
         bot.send_message(message.chat.id, BOT_RESTART)
         return

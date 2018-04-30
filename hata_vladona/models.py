@@ -200,11 +200,22 @@ class Gif(Base):
 class Chat(Base):
     __tablename__ = 'chat'
     id = Column(Integer, primary_key=True)
+    telegram_chat_id = Column(String(32), index=True, unique=True)
     camera_id = Column(Integer, ForeignKey('camera.id'))
     state = Column(String(50))
     camera = relationship('Camera')
     messages = relationship('Message', cascade='all, delete-orphan')
 
+    @staticmethod
+    def get_by_telegram_chat_id(telegram_chat_id):
+        """
+
+        :rtype: Chat
+        :type telegram_chat_id: int
+        """
+        session = database.get_session()
+        return session.query(Chat).\
+            filter(Chat.telegram_chat_id == telegram_chat_id).first()
 
 class Camera(Base):
     __tablename__ = 'camera'
