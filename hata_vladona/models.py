@@ -79,7 +79,7 @@ class Gif(Base):
     camera_id = Column(Integer, ForeignKey('camera.id'))
     camera = relationship('Camera')
 
-    __file_pattern = gif_storage_config['path'] + '/%d/%s-%04d-%02d-%02d-%02d.gif'
+    __file_pattern = gif_storage_config['path'] + '/%d/%s-%04d-%02d-%02d-%02d.mp4'
     __tmp_path = gif_storage_config['path'] + '/tmp'
 
     def get_file_path(self):
@@ -118,10 +118,22 @@ class Gif(Base):
                 shutil.copyfile(image.get_file_path(), Gif.__tmp_path + '/image%010d.jpg' % index)
                 index += 1
         image_path = os.path.abspath(Gif.__tmp_path)
-        subprocess.call(['convert',
-                         '-loop', '1',
-                         '-delay', '25',
-                         image_path + '/*.jpg',
+        subprocess.call(['ffmpeg',
+                         '-framerate',
+                         '5',
+                         '-i',
+                         image_path + '/image%010d.jpg',
+                         '-c:v',
+                         'libx264',
+                         '-profile:v',
+                         'high',
+                         '-crf',
+                         '20',
+                         '-vf',
+                         'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+                         '-y',
+                         '-pix_fmt',
+                         'yuv420p',
                          self.get_file_path()])
         Gif.remove_tmp_dir()
 
