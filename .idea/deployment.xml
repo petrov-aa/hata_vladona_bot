@@ -1,32 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="vds.sh hata_vladona_dev">
+  <component name="PublishConfigData" serverName="vagrant">
     <serverData>
-      <paths name="Copy of project-level server 'vds.sh'">
+      <paths name="vagrant">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/hata_vladona/hata_vladona" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="Copy of project-level server 'vds.sh' (1)">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/home/hata_vladona/hata_vladona" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="vds.sh">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/home/hata_vladona/hata_vladona" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="vds.sh hata_vladona_dev">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/home/hata_vladona/hata_vladona_dev/" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/vagrant" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/var/www/hata_vladona" local="$USER_HOME$/Desktop/vagrant_hata_vladona" />
           </mappings>
         </serverdata>
       </paths>

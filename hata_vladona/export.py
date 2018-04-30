@@ -1,7 +1,11 @@
+from datetime import datetime
 from sqlalchemy.exc import DatabaseError
 
-from hata_vladona.configuration import session
-from hata_vladona.models import *
+from hata_vladona.config import config
+from hata_vladona.database import database
+from hata_vladona.models import Image, Gif, Camera, GIF_PAST_DAY, GIF_PAST_WEEK, GIF_PAST_MONTH
+
+gif_storage_path = config['Gif']['path']
 
 
 def get_latest_image(camera):
@@ -10,6 +14,7 @@ def get_latest_image(camera):
     :type camera: Camera
     :rtype: Image
     """
+    session = database.get_cession()
     return session.query(Image).filter(Image.camera_id == camera.id).order_by(Image.date.desc()).first()
 
 
@@ -47,7 +52,7 @@ def __create_gif(camera, gif_type):
     :type gif_type: str
     :rtype: Gif
     """
-
+    session = database.get_session()
     try:
         now = datetime.now()
         date = datetime(now.year, now.month, now.day)
@@ -60,7 +65,6 @@ def __create_gif(camera, gif_type):
         gif.date = date
         session.add(gif)
     except DatabaseError:
-        session.rollback()
         return None
     else:
         session.commit()
@@ -75,9 +79,10 @@ def __check_if_gif_exists(camera, date, gif_type):
     :type date: datetime
     :type gif_type: str
     """
+    session = database.get_session()
     return session.query(Gif).filter(Gif.camera_id == camera.id,
-                                       Gif.date == date,
-                                       Gif.type == gif_type).first()
+                                     Gif.date == date,
+                                     Gif.type == gif_type).first()
 
 
 def get_past_day_gif(camera):
@@ -89,3 +94,21 @@ def get_past_day_gif(camera):
     now = datetime.now()
     date = datetime(now.year, now.month, now.day)
     return __check_if_gif_exists(camera, date, GIF_PAST_DAY)
+
+
+def get_today_images(camera):
+    """
+
+    :rtype: list(Image)
+    :type camera: Camera
+    """
+    return Image.get_today_images(camera)
+
+
+def get_image_by_date(camera, date):
+    """
+
+        :rtype: Image
+        :type camera: Camera
+        """
+    return Image.get_by_date(camera, date)

@@ -5,13 +5,17 @@ from datetime import datetime, timedelta
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
-from .configuration import Base, session, gif_path
+from .config import gif_storage_config
+from .database import database, Base
 
 
 GIF_TODAY = 'today'
 GIF_PAST_DAY = 'past_day'
 GIF_PAST_WEEK = 'past_week'
 GIF_PAST_MONTH = 'past_month'
+
+CHAT_STATE_WAIT_TIME = 'wait_time'
+CHAT_STATE_WAIT_CAMERA = 'wait_camera'
 
 
 class Image(Base):
@@ -23,6 +27,9 @@ class Image(Base):
     path = Column(String(255))
     camera_id = Column(Integer, ForeignKey('camera.id'))
     camera = relationship('Camera')
+
+    hour_start = 8
+    hour_end = 20
 
     def get_file_path(self):
         """
@@ -40,8 +47,25 @@ class Image(Base):
         :return:
         :rtype: Image
         """
+        session = database.get_session()
         return session.query(Image).filter(Image.camera_id == camera.id,
                                            Image.date == date).first()
+
+    @staticmethod
+    def get_today_images(camera):
+        """
+
+        :rtype: list(Image)
+        :type camera: Camera
+        """
+        session = database.get_session()
+        now = datetime.now()
+        date_from = datetime(now.year, now.month, now.day).replace(hour=Image.hour_start)
+        if now.hour < Image.hour_start:
+            date_from = date_from - timedelta(days=1)
+        return session.query(Image).\
+            filter(Image.camera_id == camera.id,
+                   Image.date >= date_from).all()
 
 
 class Gif(Base):
@@ -55,10 +79,8 @@ class Gif(Base):
     camera_id = Column(Integer, ForeignKey('camera.id'))
     camera = relationship('Camera')
 
-    __file_pattern = gif_path + '/%d/%s-%04d-%02d-%02d-%02d.gif'
-    __tmp_path = gif_path + '/tmp'
-    __hour_start = 8
-    __hour_end = 20
+    __file_pattern = gif_storage_config['path'] + '/%d/%s-%04d-%02d-%02d-%02d.mp4'
+    __tmp_path = gif_storage_config['path'] + '/tmp'
 
     def get_file_path(self):
         return Gif.__file_pattern % (self.camera_id,
@@ -82,24 +104,36 @@ class Gif(Base):
             shutil.rmtree(Gif.__tmp_path)
 
     def create_gif_dir(self):
-        gif_file_dir = os.path.dirname(self.get_file_path())
-        if not os.path.isdir(gif_file_dir):
-            os.makedirs(gif_file_dir)
+        gif_dir = os.path.dirname(self.get_file_path())
+        if not os.path.isdir(gif_dir):
+            os.makedirs(gif_dir)
 
     def create_file(self):
         image_list = self.get_image_list()
         index = 0
+        self.create_gif_dir()
         Gif.create_tmp_dir()
         for image in image_list:
             if os.path.exists(image.get_file_path()):
                 shutil.copyfile(image.get_file_path(), Gif.__tmp_path + '/image%010d.jpg' % index)
                 index += 1
         image_path = os.path.abspath(Gif.__tmp_path)
-        self.create_gif_dir()
-        subprocess.call(['convert',
-                         '-loop', '1',
-                         '-delay', '25',
-                         image_path + '/*.jpg',
+        subprocess.call(['ffmpeg',
+                         '-framerate',
+                         '5',
+                         '-i',
+                         image_path + '/image%010d.jpg',
+                         '-c:v',
+                         'libx264',
+                         '-profile:v',
+                         'high',
+                         '-crf',
+                         '20',
+                         '-vf',
+                         'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+                         '-y',
+                         '-pix_fmt',
+                         'yuv420p',
                          self.get_file_path()])
         Gif.remove_tmp_dir()
 
@@ -109,7 +143,7 @@ class Gif(Base):
         :rtype: datetime
         """
         now = datetime.now()
-        date = datetime(now.year, now.month, now.day, Gif.__hour_start)
+        date = datetime(now.year, now.month, now.day, Image.hour_start)
         if self.type == GIF_TODAY:
             return date
         elif self.type == GIF_PAST_DAY:
@@ -132,7 +166,7 @@ class Gif(Base):
             return date
         else:
             date = date - timedelta(days=1)
-            date = date.replace(hour=Gif.__hour_end)
+            date = date.replace(hour=Image.hour_end)
             return date
 
     def get_image_list(self):
@@ -157,10 +191,6 @@ class Gif(Base):
             current_date = current_date + dt
 
         return result
-
-    def set_file_id(self, file_id):
-        self.file_id = file_id
-        session.commit()
 
 
 class Chat(Base):
