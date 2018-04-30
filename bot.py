@@ -15,7 +15,7 @@ if __name__ == '__main__':
     elif bot_config['update_method'] == 'webhook':
 
         external_ip = bot_config['webhook_host']
-        external_port = bot_config['webhook_port']
+        external_port = int(bot_config['webhook_port'])
         internal_ip = '127.0.0.1'
         internal_port = 7770
         listen = '0.0.0.0'
@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
         web.run_app(
             app,
-            host=internal_ip,
-            port=internal_port,
+            host=listen,
+            port=internal_port
         )
 
