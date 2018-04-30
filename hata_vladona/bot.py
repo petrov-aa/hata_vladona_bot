@@ -156,7 +156,8 @@ def send_today_image_selector(message):
     session.commit()
     bot.send_message(message.chat.id,
                      BOT_CHOOSE_TIME,
-                     reply_markup=markup)
+                     reply_markup=markup,
+                     reply_to_message_id=message.message_id)
 
 
 @bot.message_handler(commands=['setcamera'])
@@ -168,11 +169,14 @@ def set_camera_message(message):
         return
     chat.state = CHAT_STATE_WAIT_CAMERA
     session.commit()
-    markup = ReplyKeyboardMarkup()
+    markup = ReplyKeyboardMarkup(selective=True)
     cameras = session.query(Camera).all()
     for camera in cameras:
         markup.add(KeyboardButton(camera.name))
-    bot.send_message(message.chat.id, BOT_CHOOSE_CAMERA, reply_markup=markup)
+    bot.send_message(message.chat.id,
+                     BOT_CHOOSE_CAMERA,
+                     reply_markup=markup,
+                     reply_to_message_id=message.message_id)
 
 
 @bot.message_handler(commands=['donate'])
