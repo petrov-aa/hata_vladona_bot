@@ -58,7 +58,7 @@ BOT_CHOOSE_CAMERA_ERROR="""
 """
 
 BOT_CHOOSE_CAMERA_SUCCESS="""
-Камера *"%s"* выбрана успешно
+Выбрана камера *"%s"*
 """
 
 BOT_VIDEO_UPLOAD="""
