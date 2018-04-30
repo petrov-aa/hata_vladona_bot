@@ -53,7 +53,7 @@ if 'Bot' not in config:
 if 'token' not in config['Bot']:
     raise ConfigError('Не задан API TOKEN')
 
-if 'token' not in config['Bot']:
+if 'vlad_username' not in config['Bot']:
     raise ConfigError('Не задан username Влада')
 
 if 'use_proxy' not in config['Bot']:
