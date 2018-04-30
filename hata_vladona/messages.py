@@ -11,7 +11,7 @@ Github - https://git.io/vpnaq
 """
 
 BOT_HELP= """
-Текущая активная камера *"%s"*
+Текущая камера *"%s"*
 
 /start - Начало работы
 /help - Список команд
@@ -50,7 +50,7 @@ BOT_CHOOSE_TIME_NO_IMAGE_ERROR="""
 """
 
 BOT_CHOOSE_CAMERA="""
-Выберите свою камеру или нажмите /cancel для отмены
+Выберите камеру или нажмите /cancel для отмены
 """
 
 BOT_CHOOSE_CAMERA_ERROR="""
