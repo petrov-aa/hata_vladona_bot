@@ -14,7 +14,7 @@ def get_latest_image(camera):
     :type camera: Camera
     :rtype: Image
     """
-    session = database.get_cession()
+    session = database.get_session()
     return session.query(Image).filter(Image.camera_id == camera.id).order_by(Image.date.desc()).first()
 
 
