@@ -8,7 +8,7 @@ from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
 
 from hata_vladona.models import *  # THIS imports all models from project
-from hata_vladona.configuration import engine_url, Base
+from hata_vladona.database import engine_url, Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -10,6 +10,13 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="vds.sh hata_vladona">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/hata_vladona/hata_vladona" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
     </serverData>
   </component>
 </project>

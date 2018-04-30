@@ -11,6 +11,8 @@ __engine_url.password = database_config['password']
 __engine_url.host = database_config['host']
 __engine_url.database = database_config['name']
 
+engine_url = str(__engine_url)
+
 __engine = create_engine(str(__engine_url) + '?charset=utf8')
 
 class __Database:
