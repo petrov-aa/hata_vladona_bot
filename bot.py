@@ -51,6 +51,5 @@ if __name__ == '__main__':
             app,
             host=internal_ip,
             port=internal_port,
-            ssl_context=context,
         )
 
