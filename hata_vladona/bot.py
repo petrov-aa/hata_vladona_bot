@@ -85,6 +85,10 @@ def send_past_day_gif(message):
         return
     camera = chat.camera
     gif = export.get_past_day_gif(camera)
+    gif_file_path = gif.get_file_path()
+    if not os.path.exists(gif_file_path):
+        bot.send_message(message.chat.id, BOT_ERROR_NO_GIF_FILE)
+        return
     document = open(gif.get_file_path(), 'rb')
     result = bot.send_document(message.chat.id, document)
     gif.file_id = result.document.file_id

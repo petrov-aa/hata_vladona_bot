@@ -59,3 +59,7 @@ BOT_CHOOSE_CAMERA_ERROR="""
 BOT_CHOOSE_CAMERA_SUCCESS="""
 Камера *"%s"* выбрана успешно
 """
+
+BOT_ERROR_NO_GIF_FILE="""
+Ошибка: На сервере отсутвут файл с видео. Повторите попытку позже
+"""
