@@ -72,7 +72,7 @@ bot_config = {
 if bot_config['update_method'] == 'webhook':
     if 'webhook_host' not in config['Bot']:
         raise ConfigError('Не задан webhook-хост')
-    if 'webhook port' not in config['Bot']:
+    if 'webhook_port' not in config['Bot']:
         raise ConfigError('Не задан webhook-порт')
     bot_config['webhook_host'] = config['Bot']['webhook_host']
     bot_config['webhook_port'] = config['Bot']['webhook_port']
