@@ -8,8 +8,7 @@ from hata_vladona.config import bot_config, proxy_config
 from hata_vladona import export
 from hata_vladona.database import database
 from hata_vladona.messages import *
-from hata_vladona.models import Camera, CHAT_STATE_WAIT_TIME, CHAT_STATE_WAIT_CAMERA, Chat, Image
-
+from hata_vladona.models import Camera, CHAT_STATE_WAIT_TIME, CHAT_STATE_WAIT_CAMERA, Chat, Image, Message
 
 if bot_config['use_proxy']:
     apihelper.proxy = {'https': '%s://%s:%s@%s:%s' % (proxy_config['protocol'],
@@ -89,9 +88,21 @@ def send_past_day_gif(message):
     if not os.path.exists(gif_file_path):
         bot.send_message(message.chat.id, BOT_ERROR_NO_GIF_FILE)
         return
-    document = open(gif.get_file_path(), 'rb')
-    result = bot.send_document(message.chat.id, document)
-    gif.file_id = result.document.file_id
+    if gif.file_id:
+        bot.send_document(message.chat.id, gif.file_id)
+    else:
+        msg = Message()
+        result = bot.send_message(message.chat.id, BOT_VIDEO_UPLOAD)
+        msg.id = result.message_id
+        msg.gif = gif
+        msg.chat = chat
+        session.add(msg)
+        session.flush()
+        document = open(gif.get_file_path(), 'rb')
+        result = bot.send_document(message.chat.id, document)
+        gif.file_id = result.document.file_id
+        bot.delete_message(msg.chat_id, msg.id)
+        session.delete(msg)
     session.commit()
 
 
@@ -108,9 +119,21 @@ def send_past_week_gif(message):
     if not os.path.exists(gif_file_path):
         bot.send_message(message.chat.id, BOT_ERROR_NO_GIF_FILE)
         return
-    document = open(gif.get_file_path(), 'rb')
-    result = bot.send_document(message.chat.id, document)
-    gif.file_id = result.document.file_id
+    if gif.file_id:
+        bot.send_document(message.chat.id, gif.file_id)
+    else:
+        msg = Message()
+        result = bot.send_message(message.chat.id, BOT_VIDEO_UPLOAD)
+        msg.id = result.message_id
+        msg.gif = gif
+        msg.chat = chat
+        session.add(msg)
+        session.flush()
+        document = open(gif.get_file_path(), 'rb')
+        result = bot.send_document(message.chat.id, document)
+        gif.file_id = result.document.file_id
+        bot.delete_message(msg.chat_id, msg.id)
+        session.delete(msg)
     session.commit()
 
 

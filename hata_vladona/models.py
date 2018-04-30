@@ -78,6 +78,7 @@ class Gif(Base):
     file_id = Column(String(255))
     camera_id = Column(Integer, ForeignKey('camera.id'))
     camera = relationship('Camera')
+    messages = relationship('Message', cascade='all, delete-orphan')
 
     __file_pattern = gif_storage_config['path'] + '/%d/%s-%04d-%02d-%02d-%02d.mp4'
     __tmp_path = gif_storage_config['path'] + '/tmp'
@@ -202,6 +203,7 @@ class Chat(Base):
     camera_id = Column(Integer, ForeignKey('camera.id'))
     state = Column(String(50))
     camera = relationship('Camera')
+    messages = relationship('Message', cascade='all, delete-orphan')
 
 
 class Camera(Base):
@@ -212,3 +214,12 @@ class Camera(Base):
     start_date = Column(DateTime)
     images = relationship('Image', cascade='all, delete-orphan')
     gifs = relationship('Gif', cascade='all, delete-orphan')
+
+
+class Message(Base):
+    __tablename__ = 'message'
+    id = Column(Integer, primary_key=True)
+    chat_id = Column(Integer, ForeignKey('chat.id'))
+    chat = relationship('Chat')
+    gif_id = Column(Integer, ForeignKey('gif.id'))
+    gif = relationship('Gif')
