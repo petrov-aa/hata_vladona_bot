@@ -232,5 +232,6 @@ class Message(Base):
     id = Column(Integer, primary_key=True)
     chat_id = Column(Integer, ForeignKey('chat.id'))
     chat = relationship('Chat')
+    telegram_message_id = Column(Integer)
     gif_id = Column(Integer, ForeignKey('gif.id'))
     gif = relationship('Gif')

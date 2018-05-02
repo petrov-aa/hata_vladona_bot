@@ -8,7 +8,8 @@ from hata_vladona.config import bot_config, proxy_config
 from hata_vladona import export
 from hata_vladona.database import database
 from hata_vladona.messages import *
-from hata_vladona.models import Camera, CHAT_STATE_WAIT_TIME, CHAT_STATE_WAIT_CAMERA, Chat, Image, Message
+from hata_vladona.models import Camera,\
+    CHAT_STATE_WAIT_TIME, CHAT_STATE_WAIT_CAMERA, Chat, Image, Message
 
 if bot_config['use_proxy']:
     apihelper.proxy = {'https': '%s://%s:%s@%s:%s' % (proxy_config['protocol'],
@@ -44,7 +45,9 @@ def send_help(message):
     if chat is None:
         bot.send_message(message.chat.id, BOT_RESTART)
         return
-    bot.send_message(message.chat.id, BOT_HELP % chat.camera.name, parse_mode='Markdown')
+    bot.send_message(message.chat.id,
+                     BOT_HELP % chat.camera.name,
+                     parse_mode='Markdown')
 
 
 @bot.message_handler(commands=['cancel'])
@@ -124,7 +127,7 @@ def send_past_week_gif(message):
     else:
         msg = Message()
         result = bot.send_message(message.chat.id, BOT_VIDEO_UPLOAD)
-        msg.id = result.message_id
+        msg.telegram_message_id = result.message_id
         msg.gif = gif
         msg.chat = chat
         session.add(msg)
@@ -132,7 +135,7 @@ def send_past_week_gif(message):
         document = open(gif.get_file_path(), 'rb')
         result = bot.send_document(message.chat.id, document)
         gif.file_id = result.document.file_id
-        bot.delete_message(msg.chat_id, msg.id)
+        bot.delete_message(msg.chat.telegram_chat_id, msg.telegram_message_id)
         session.delete(msg)
     session.commit()
 
