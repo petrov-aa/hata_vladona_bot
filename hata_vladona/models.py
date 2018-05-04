@@ -113,6 +113,7 @@ class Gif(Base):
         image_list = self.get_image_list()
         index = 0
         self.create_gif_dir()
+        Gif.remove_tmp_dir()
         Gif.create_tmp_dir()
         for image in image_list:
             if os.path.exists(image.get_file_path()):
