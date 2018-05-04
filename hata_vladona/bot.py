@@ -1,8 +1,10 @@
 import os
 import re
+import logging
 from datetime import datetime, timedelta
 from telebot import TeleBot, apihelper
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from telebot import logger
 
 from hata_vladona.config import bot_config, proxy_config
 from hata_vladona import export
@@ -17,6 +19,8 @@ if bot_config['use_proxy']:
                                                       proxy_config['password'],
                                                       proxy_config['host'],
                                                       proxy_config['port'])}
+
+logger.setLevel(logging.DEBUG)
 
 bot = TeleBot(bot_config['token'])
 
