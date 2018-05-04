@@ -96,7 +96,7 @@ def send_past_day_gif(message):
     else:
         msg = Message()
         result = bot.send_message(message.chat.id, BOT_VIDEO_UPLOAD)
-        msg.id = result.message_id
+        msg.telegram_message_id = result.message_id
         msg.gif = gif
         msg.chat = chat
         session.add(msg)
@@ -104,7 +104,7 @@ def send_past_day_gif(message):
         document = open(gif.get_file_path(), 'rb')
         result = bot.send_document(message.chat.id, document)
         gif.file_id = result.document.file_id
-        bot.delete_message(msg.chat_id, msg.id)
+        bot.delete_message(msg.chat.telegram_chat_id, msg.telegram_message_id)
         session.delete(msg)
     session.commit()
 
