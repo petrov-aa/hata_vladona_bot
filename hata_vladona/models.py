@@ -48,8 +48,9 @@ class Image(Base):
         :rtype: Image
         """
         session = database.get_session()
-        return session.query(Image).filter(Image.camera_id == camera.id,
-                                           Image.date == date).first()
+        image = session.query(Image).filter(Image.camera_id == camera.id,
+                                            Image.date == date).first()
+        return image
 
     @staticmethod
     def get_today_images(camera):
@@ -63,9 +64,10 @@ class Image(Base):
         date_from = datetime(now.year, now.month, now.day).replace(hour=Image.hour_start)
         if now.hour < Image.hour_start:
             date_from = date_from - timedelta(days=1)
-        return session.query(Image).\
+        images = session.query(Image).\
             filter(Image.camera_id == camera.id,
                    Image.date >= date_from).all()
+        return images
 
 
 class Gif(Base):
@@ -215,8 +217,10 @@ class Chat(Base):
         :type telegram_chat_id: int
         """
         session = database.get_session()
-        return session.query(Chat).\
+        chat = session.query(Chat).\
             filter(Chat.telegram_chat_id == telegram_chat_id).first()
+        return chat
+
 
 class Camera(Base):
     __tablename__ = 'camera'

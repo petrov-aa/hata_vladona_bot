@@ -36,10 +36,12 @@ def send_help(message):
         chat.telegram_chat_id = message.chat.id
         chat.camera_id = 3
         session.add(chat)
-        session.commit()
+        session.flush()
     bot.send_message(message.chat.id,
                      BOT_START % (bot_config['vlad_username']),
                      disable_web_page_preview=True)
+    session.commit()
+    session.close()
 
 
 @bot.message_handler(commands=['help'])
@@ -52,6 +54,8 @@ def send_help(message):
     bot.send_message(message.chat.id,
                      BOT_HELP % chat.camera.name,
                      parse_mode='Markdown')
+    session.commit()
+    session.close()
 
 
 @bot.message_handler(commands=['cancel'])
@@ -63,10 +67,12 @@ def send_last_image(message):
         return
     if chat.state is not None:
         chat.state = None
-        session.commit()
+        session.flush()
     bot.send_message(message.chat.id,
                      BOT_CANCEL,
                      reply_markup=ReplyKeyboardRemove())
+    session.commit()
+    session.close()
 
 
 @bot.message_handler(commands=['last'])
@@ -80,6 +86,8 @@ def send_last_image(message):
     image = export.get_latest_image(camera)
     photo = open(image.get_file_path(), 'rb')
     bot.send_photo(message.chat.id, photo)
+    session.commit()
+    session.close()
 
 
 @bot.message_handler(commands=['yesterday'])
@@ -110,7 +118,9 @@ def send_past_day_gif(message):
         gif.file_id = result.document.file_id
         bot.delete_message(msg.chat.telegram_chat_id, msg.telegram_message_id)
         session.delete(msg)
+        session.flush()
     session.commit()
+    session.close()
 
 
 @bot.message_handler(commands=['week'])
@@ -141,7 +151,9 @@ def send_past_week_gif(message):
         gif.file_id = result.document.file_id
         bot.delete_message(msg.chat.telegram_chat_id, msg.telegram_message_id)
         session.delete(msg)
+        session.flush()
     session.commit()
+    session.close()
 
 
 @bot.message_handler(commands=['today'])
@@ -160,11 +172,13 @@ def send_today_image_selector(message):
     for image in images:
         markup.add(KeyboardButton('%02d:00' % image.date.hour))
     chat.state = CHAT_STATE_WAIT_TIME
-    session.commit()
+    session.flush()
     bot.send_message(message.chat.id,
                      BOT_CHOOSE_TIME,
                      reply_markup=markup,
                      reply_to_message_id=message.message_id)
+    session.commit()
+    session.close()
 
 
 @bot.message_handler(commands=['setcamera'])
@@ -175,7 +189,7 @@ def set_camera_message(message):
         bot.send_message(message.chat.id, BOT_RESTART)
         return
     chat.state = CHAT_STATE_WAIT_CAMERA
-    session.commit()
+    session.flush()
     markup = ReplyKeyboardMarkup(selective=True)
     cameras = session.query(Camera).all()
     for camera in cameras:
@@ -184,6 +198,8 @@ def set_camera_message(message):
                      BOT_CHOOSE_CAMERA,
                      reply_markup=markup,
                      reply_to_message_id=message.message_id)
+    session.commit()
+    session.close()
 
 
 @bot.message_handler(commands=['donate'])
@@ -218,7 +234,7 @@ def process_message(message):
         photo = open(image.get_file_path(), 'rb')
         bot.send_photo(message.chat.id, photo, reply_markup=ReplyKeyboardRemove())
         chat.state = None
-        session.commit()
+        session.flush()
     if chat.state == CHAT_STATE_WAIT_CAMERA:
         text = message.text
         new_camera = session.query(Camera).filter(Camera.name == text).first()
@@ -228,9 +244,11 @@ def process_message(message):
             return
         chat.camera = new_camera
         chat.state = None
-        session.commit()
+        session.flush()
         bot.send_message(message.chat.id,
                          BOT_CHOOSE_CAMERA_SUCCESS % new_camera.name,
                          parse_mode='Markdown',
                          reply_markup=ReplyKeyboardRemove())
+    session.commit()
+    session.close()
 

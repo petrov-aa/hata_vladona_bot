@@ -85,8 +85,9 @@ def fetch_next():
             image.camera = camera
 
             session.add(image)
+            session.flush()
 
     except (HTTPError, URLError, OSError):
         session.rollback()
-    else:
-        session.commit()
+    session.commit()
+    session.close()

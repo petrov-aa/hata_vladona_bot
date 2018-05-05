@@ -64,11 +64,10 @@ def __create_gif(camera, gif_type):
         gif.type = gif_type
         gif.date = date
         session.add(gif)
+        session.flush()
     except DatabaseError:
         return None
-    else:
-        session.commit()
-        return gif
+    return gif
 
 
 def __check_if_gif_exists(camera, date, gif_type):
@@ -80,6 +79,7 @@ def __check_if_gif_exists(camera, date, gif_type):
     :type gif_type: str
     """
     session = database.get_session()
+    camera = session.merge(camera)
     return session.query(Gif).filter(Gif.camera_id == camera.id,
                                      Gif.date == date,
                                      Gif.type == gif_type).first()
