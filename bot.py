@@ -1,6 +1,5 @@
 import telebot
 from aiohttp import web
-import ssl
 
 from hata_vladona.bot import bot
 from hata_vladona.config import bot_config
@@ -16,12 +15,9 @@ if __name__ == '__main__':
 
         external_ip = bot_config['webhook_host']
         external_port = int(bot_config['webhook_port'])
-        internal_ip = '127.0.0.1'
-        internal_port = 7770
-        listen = '0.0.0.0'
+        listen = '127.0.0.1'
 
-        ssl_cert = '/etc/nginx/ssl/ssl-cert.pem'
-        ssl_key = '/etc/nginx/ssl/ssl-key.pem'
+        ssl_cert = bot_config['public_cert_path']
 
         webhook_url_base = 'https://{}:{}'.format(external_ip, external_port)
         webhook_url_path = '/hata_vladona/{}/'.format(bot_config['token'])
@@ -44,12 +40,9 @@ if __name__ == '__main__':
         bot.set_webhook(url=webhook_url_base + webhook_url_path,
                         certificate=open(ssl_cert, 'r'))
 
-        context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-        context.load_cert_chain(ssl_cert, ssl_key)
-
         web.run_app(
             app,
             host=listen,
-            port=internal_port
+            port=bot_config['local_port']
         )
 
