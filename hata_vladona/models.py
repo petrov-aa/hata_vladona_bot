@@ -24,7 +24,6 @@ class Image(Base):
 
     id = Column(Integer, primary_key=True)
     date = Column(DateTime)
-    path = Column(String(255))
     camera_id = Column(Integer, ForeignKey('camera.id'))
     camera = relationship('Camera')
 
