@@ -3,11 +3,8 @@ import urllib.request
 from datetime import datetime
 from urllib.error import HTTPError, URLError
 
-from hata_vladona.config import image_storage_config
-from hata_vladona.database import database
+from hata_vladona.database import commit_session, flush_session
 from hata_vladona.models import Image, Camera
-
-fetch_path_pattern = image_storage_config['path'] + '/%d/%04d-%02d-%02d/%02d.jpg'
 
 
 def __get_current_fetch_date():
@@ -29,25 +26,15 @@ def __get_fetch_url(camera, date):
     return camera.url_base % (date.year, date.month, date.day, date.hour)
 
 
-def __get_fetch_path(camera, date):
-    """
-
-    :type camera: Camera
-    :type date: datetime
-    :rtype: str
-    """
-    return fetch_path_pattern % (camera.id, date.year, date.month, date.day, date.hour)
-
-
 def __check_if_already_fetched(camera, date):
     """
 
     :type camera: Camera
     :type date: datetime
     """
-    session = database.get_session()
-    return session.query(Image).filter(Image.camera_id == camera.id,
-                                       Image.date == date).first() is not None
+    with flush_session() as session:
+        return session.query(Image).filter(Image.camera_id == camera.id,
+                                           Image.date == date).first() is not None
 
 
 def __make_storage_dirs(path):
@@ -61,33 +48,29 @@ def __make_storage_dirs(path):
 
 
 def fetch_next():
-    session = database.get_session()
-    try:
-        cameras = session.query(Camera).all()
+    with commit_session() as session:
+        try:
+            cameras = session.query(Camera).all()
 
-        for camera in cameras:
+            for camera in cameras:
 
-            fetch_date = __get_current_fetch_date()
+                fetch_date = __get_current_fetch_date()
 
-            if __check_if_already_fetched(camera, fetch_date):
-                return
+                if __check_if_already_fetched(camera, fetch_date):
+                    return
 
-            fetch_url = __get_fetch_url(camera, fetch_date)
-            fetch_path = __get_fetch_path(camera, fetch_date)
+                image = Image()
+                image.date = fetch_date
+                image.camera = camera
 
-            __make_storage_dirs(fetch_path)
+                fetch_url = __get_fetch_url(camera, fetch_date)
+                fetch_path = image.get_file_path()
 
-            urllib.request.urlretrieve(fetch_url, fetch_path)
+                __make_storage_dirs(fetch_path)
 
-            image = Image()
-            image.date = fetch_date
-            image.path = os.path.abspath(fetch_path)
-            image.camera = camera
+                urllib.request.urlretrieve(fetch_url, fetch_path)
 
-            session.add(image)
-            session.flush()
+                session.add(image)
 
-    except (HTTPError, URLError, OSError):
-        session.rollback()
-    session.commit()
-    session.close()
+        except (HTTPError, URLError):
+            pass

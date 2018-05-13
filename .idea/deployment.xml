@@ -6,7 +6,7 @@
         <serverdata>
           <mappings>
             <mapping deploy="/vagrant" local="$PROJECT_DIR$" web="/" />
-            <mapping deploy="/var/www/hata_vladona" local="$USER_HOME$/Desktop/vagrant_hata_vladona" />
+            <mapping deploy="/var/www/hata_vladona/storage" local="$USER_HOME$/Desktop/vagrant_hata_vladona" web="storage" />
           </mappings>
         </serverdata>
       </paths>
@@ -14,6 +14,7 @@
         <serverdata>
           <mappings>
             <mapping deploy="/home/hata_vladona/hata_vladona" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/var/www/hata_vladona/storage" local="$PROJECT_DIR$/storage" web="/storage" />
           </mappings>
         </serverdata>
       </paths>

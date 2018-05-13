@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
@@ -15,29 +16,32 @@ engine_url = str(__engine_url)
 
 __engine = create_engine(str(__engine_url) + '?charset=utf8')
 
-
-class __Database:
-
-    __session = None
-
-    def __init__(self, session_maker):
-        """
-
-        :type session_maker: sessionmaker
-        """
-        self.__session__maker = session_maker
-
-    def get_session(self):
-        """
-
-        :rtype: Session
-        """
-        if self.__session is None or self.__session.dirty:
-            self.__session = self.__session__maker()
-        return self.__session
+__Session = scoped_session(sessionmaker(bind=__engine))
 
 
-database = __Database(sessionmaker(bind=__engine))
+@contextmanager
+def flush_session():
+    session = __Session()
+    try:
+        yield session
+        session.flush()
+    except:
+        session.rollback()
+        # raise
+
+
+@contextmanager
+def commit_session():
+    session = __Session()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        # raise
+    finally:
+        session.close()
+
 
 Base = declarative_base()
 

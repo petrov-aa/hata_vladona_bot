@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlalchemy.exc import DatabaseError
 
 from hata_vladona.config import config
-from hata_vladona.database import database
+from hata_vladona.database import flush_session
 from hata_vladona.models import Image, Gif, Camera, GIF_PAST_DAY, GIF_PAST_WEEK, GIF_PAST_MONTH
 
 gif_storage_path = config['Gif']['path']
@@ -14,8 +14,8 @@ def get_latest_image(camera):
     :type camera: Camera
     :rtype: Image
     """
-    session = database.get_session()
-    return session.query(Image).filter(Image.camera_id == camera.id).order_by(Image.date.desc()).first()
+    with flush_session() as session:
+        return session.query(Image).filter(Image.camera_id == camera.id).order_by(Image.date.desc()).first()
 
 
 def create_past_day_gif(camera):
@@ -52,22 +52,21 @@ def __create_gif(camera, gif_type):
     :type gif_type: str
     :rtype: Gif
     """
-    session = database.get_session()
-    try:
-        now = datetime.now()
-        date = datetime(now.year, now.month, now.day)
-        gif = __check_if_gif_exists(camera, date, gif_type)
-        if gif is not None:
-            return gif
-        gif = Gif()
-        gif.camera = camera
-        gif.type = gif_type
-        gif.date = date
-        session.add(gif)
-        session.flush()
-    except DatabaseError:
-        return None
-    return gif
+    with flush_session() as session:
+        try:
+            now = datetime.now()
+            date = datetime(now.year, now.month, now.day)
+            gif = __check_if_gif_exists(camera, date, gif_type)
+            if gif is not None:
+                return gif
+            gif = Gif()
+            gif.camera = camera
+            gif.type = gif_type
+            gif.date = date
+            session.add(gif)
+        except DatabaseError:
+            return None
+        return gif
 
 
 def __check_if_gif_exists(camera, date, gif_type):
@@ -78,11 +77,11 @@ def __check_if_gif_exists(camera, date, gif_type):
     :type date: datetime
     :type gif_type: str
     """
-    session = database.get_session()
-    camera = session.merge(camera)
-    return session.query(Gif).filter(Gif.camera_id == camera.id,
-                                     Gif.date == date,
-                                     Gif.type == gif_type).first()
+    with flush_session() as session:
+        camera = session.merge(camera)
+        return session.query(Gif).filter(Gif.camera_id == camera.id,
+                                         Gif.date == date,
+                                         Gif.type == gif_type).first()
 
 
 def get_past_day_gif(camera):

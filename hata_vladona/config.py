@@ -1,7 +1,9 @@
 from configparser import ConfigParser
 
+
 class ConfigError(Exception):
     pass
+
 
 config_file = './config.ini'
 

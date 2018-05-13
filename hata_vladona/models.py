@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
-from .config import gif_storage_config
-from .database import database, Base
+from .config import gif_storage_config, image_storage_config
+from .database import flush_session, Base
 
 
 GIF_TODAY = 'today'
@@ -31,15 +31,23 @@ class Image(Base):
     hour_start = 8
     hour_end = 20
 
+    __file_pattern = '/%d/%04d-%02d-%02d/%02d.jpg'
+
     def get_file_path(self):
         """
 
         :rtype: str
         """
-        return self.path
+        date = self.date
+        camera = self.camera
+        return image_storage_config['path'] + self.__file_pattern % (camera.id,
+                                                                     date.year,
+                                                                     date.month,
+                                                                     date.day,
+                                                                     date.hour)
 
-    @staticmethod
-    def get_by_date(camera, date):
+    @classmethod
+    def get_by_date(cls, camera, date):
         """
 
         :type camera: Camera
@@ -47,27 +55,27 @@ class Image(Base):
         :return:
         :rtype: Image
         """
-        session = database.get_session()
-        image = session.query(Image).filter(Image.camera_id == camera.id,
-                                            Image.date == date).first()
-        return image
+        with flush_session() as session:
+            image = session.query(cls).filter(cls.camera_id == camera.id,
+                                              cls.date == date).first()
+            return image
 
-    @staticmethod
-    def get_today_images(camera):
+    @classmethod
+    def get_today_images(cls, camera):
         """
 
-        :rtype: list(Image)
+        :rtype: list
         :type camera: Camera
         """
-        session = database.get_session()
-        now = datetime.now()
-        date_from = datetime(now.year, now.month, now.day).replace(hour=Image.hour_start)
-        if now.hour < Image.hour_start:
-            date_from = date_from - timedelta(days=1)
-        images = session.query(Image).\
-            filter(Image.camera_id == camera.id,
-                   Image.date >= date_from).all()
-        return images
+        with flush_session() as session:
+            now = datetime.now()
+            date_from = datetime(now.year, now.month, now.day).replace(hour=cls.hour_start)
+            if now.hour < cls.hour_start:
+                date_from = date_from - timedelta(days=1)
+            images = session.query(cls).\
+                filter(cls.camera_id == camera.id,
+                       cls.date >= date_from).all()
+            return images
 
 
 class Gif(Base):
@@ -216,10 +224,9 @@ class Chat(Base):
         :rtype: Chat
         :type telegram_chat_id: int
         """
-        session = database.get_session()
-        chat = session.query(Chat).\
-            filter(Chat.telegram_chat_id == telegram_chat_id).first()
-        return chat
+        with flush_session() as session:
+            return session.query(Chat).\
+                filter(Chat.telegram_chat_id == telegram_chat_id).first()
 
 
 class Camera(Base):
