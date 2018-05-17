@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 from datetime import datetime, timedelta
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, desc
 from sqlalchemy.orm import relationship
 
 from .config import gif_storage_config, image_storage_config
@@ -75,6 +75,17 @@ class Image(Base):
                 filter(cls.camera_id == camera.id,
                        cls.date >= date_from).all()
             return images
+
+    @classmethod
+    def get_first_image(cls, camera):
+        with flush_session() as session:
+            return session.query(Image).filter(Image.camera == camera).order_by(Image.date).first()
+
+    @classmethod
+    def get_day_first_image(cls, camera, date):
+        with flush_session() as session:
+            return session.query(cls).filter(Image.camera == camera, Image.date >= date)\
+                .order_by(Image.date).first()
 
 
 class Gif(Base):

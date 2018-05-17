@@ -2,7 +2,7 @@ from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 from .config import database_config
 
@@ -27,7 +27,6 @@ def flush_session():
         session.flush()
     except:
         session.rollback()
-        # raise
 
 
 @contextmanager
@@ -38,7 +37,6 @@ def commit_session():
         session.commit()
     except:
         session.rollback()
-        # raise
     finally:
         session.close()
 

@@ -1,7 +1,9 @@
 import os
 import re
 import logging
+import dateparser
 from datetime import datetime, timedelta
+
 from telebot import TeleBot, apihelper
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from telebot import logger
@@ -232,3 +234,31 @@ def process_message(message):
                              BOT_CHOOSE_CAMERA_SUCCESS % new_camera.name,
                              parse_mode='Markdown',
                              reply_markup=ReplyKeyboardRemove())
+        else:
+            text = message.text.strip()
+            parsed_date = dateparser.parse(text, languages=['ru', 'en'])
+            if parsed_date is None:
+                return
+            now = datetime.now()
+            if parsed_date > now:
+                bot.send_message(message.chat.id, ':(')
+                return
+            date = datetime(parsed_date.year, parsed_date.month, parsed_date.day, parsed_date.hour)
+            if Image.hour_start <= parsed_date.hour <= Image.hour_end:
+                image = Image.get_by_date(camera, date)
+            else:
+                image = Image.get_day_first_image(camera,
+                                                  datetime(parsed_date.year, parsed_date.month, parsed_date.day))
+            if image is not None:
+                photo = open(image.get_file_path(), 'rb')
+                bot.send_photo(message.chat.id, photo)
+            else:
+                first_image = Image.get_first_image(camera)
+                if first_image is None:
+                    return
+                if date < first_image.date:
+                    bot.send_message(message.chat.id, BOT_IMAGE_AVAILABLE_FROM % (first_image.date.day,
+                                                                                  first_image.date.month,
+                                                                                  first_image.date.year))
+                else:
+                    bot.send_message(message.chat.id, BOT_IMAGE_NOT_AVAILABLE)
