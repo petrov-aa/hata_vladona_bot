@@ -220,7 +220,7 @@ def process_message(message):
             bot.send_photo(message.chat.id, photo, reply_markup=ReplyKeyboardRemove())
             chat.state = None
             session.flush()
-        if chat.state == CHAT_STATE_WAIT_CAMERA:
+        elif chat.state == CHAT_STATE_WAIT_CAMERA:
             text = message.text
             new_camera = session.query(Camera).filter(Camera.name == text).first()
             if new_camera is None:
