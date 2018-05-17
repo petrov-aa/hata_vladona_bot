@@ -235,6 +235,8 @@ def process_message(message):
                              parse_mode='Markdown',
                              reply_markup=ReplyKeyboardRemove())
         else:
+            if chat.state is not None:
+                return
             text = message.text.strip()
             parsed_date = dateparser.parse(text, languages=['ru', 'en'])
             if parsed_date is None:
