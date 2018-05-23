@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="vagrant">
+  <component name="PublishConfigData">
     <serverData>
-      <paths name="vagrant">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/vagrant" local="$PROJECT_DIR$" web="/" />
-            <mapping deploy="/var/www/hata_vladona/storage" local="$USER_HOME$/Desktop/vagrant_hata_vladona" web="storage" />
-          </mappings>
-        </serverdata>
-      </paths>
       <paths name="vds.sh hata_vladona">
         <serverdata>
           <mappings>

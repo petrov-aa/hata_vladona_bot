@@ -8,9 +8,7 @@ if __name__ == '__main__':
         for camera in cameras:
 
             gif = export.create_past_day_gif(camera)
-            gif = session.merge(gif)
             gif.create_file()
 
             gif = export.create_past_week_gif(camera)
-            gif = session.merge(gif)
             gif.create_file()

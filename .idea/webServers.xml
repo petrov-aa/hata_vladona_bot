@@ -2,14 +2,6 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="053d53b4-92bb-4a18-a4de-538a541dd64d" name="vagrant" url="http://vagrant_hata_vladona">
-        <fileTransfer host="vagrant_hata_vladona" port="2222" privateKey="$PROJECT_DIR$/.vagrant/machines/default/virtualbox/private_key" accessType="SFTP" keyPair="true">
-          <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" />
-          </advancedOptions>
-          <option name="port" value="2222" />
-        </fileTransfer>
-      </webServer>
       <webServer id="59d547e1-a094-4d52-b587-9a4dd095a1fa" name="vds.sh hata_vladona" url="http://91.235.137.225">
         <fileTransfer host="91.235.137.225" port="22" accessType="SFTP">
           <advancedOptions>
