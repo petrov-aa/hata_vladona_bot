@@ -27,6 +27,8 @@ def flush_session():
         session.flush()
     except:
         session.rollback()
+        session.close()
+        raise
 
 
 @contextmanager
