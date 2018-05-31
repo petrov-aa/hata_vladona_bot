@@ -24,6 +24,7 @@ if bot_config['use_proxy']:
 
 # logger.setLevel(logging.DEBUG)
 
+
 bot = TeleBot(bot_config['token'])
 
 time_pattern = re.compile('^([0-9]{2}):00$')
