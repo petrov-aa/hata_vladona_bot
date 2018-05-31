@@ -22,7 +22,7 @@ if bot_config['use_proxy']:
                                                       proxy_config['host'],
                                                       proxy_config['port'])}
 
-logger.setLevel(logging.DEBUG)
+# logger.setLevel(logging.DEBUG)
 
 bot = TeleBot(bot_config['token'])
 
