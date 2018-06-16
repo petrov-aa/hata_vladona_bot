@@ -130,7 +130,11 @@ class Gif(Base):
             os.makedirs(gif_dir)
 
     def create_file(self):
-        image_list = self.get_image_list()
+        image_list_raw = self.get_image_list()
+        if self.type == GIF_PAST_MONTH:
+            image_list = image_list_raw[::4]
+        else:
+            image_list = image_list_raw
         index = 0
         self.create_gif_dir()
         Gif.remove_tmp_dir()
