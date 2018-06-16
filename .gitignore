@@ -188,3 +188,4 @@ config.ini
 storage
 gif
 test.py
+copydatabase.sh
