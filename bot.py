@@ -6,7 +6,7 @@ from hata_vladona.config import bot_config
 
 if __name__ == '__main__':
 
-    if bot_config['update_method'] == 'getUpdates':
+    if bot_config['update_method'] == 'pooling':
 
         bot.remove_webhook()
         bot.polling(none_stop=True, timeout=9999)
