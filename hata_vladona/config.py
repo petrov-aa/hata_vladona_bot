@@ -87,7 +87,7 @@ if bot_config['update_method'] == 'webhook':
         raise ConfigError('Не задан путь к публичному SSL-сертификату')
     bot_config['webhook_host'] = config['Bot']['webhook_host']
     bot_config['webhook_port'] = config['Bot']['webhook_port']
-    bot_config['socket_path'] = int(config['Bot']['socket_path'])
+    bot_config['socket_path'] = config['Bot']['socket_path']
     bot_config['public_cert_path'] = config['Bot']['public_cert_path']
 
 proxy_config = {}
