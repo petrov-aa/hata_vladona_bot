@@ -71,7 +71,7 @@ bot_config = {
     'update_method': config['Bot']['update_method'],
     'webhook_host': '',
     'webhook_port': '',
-    'local_port': '',
+    'socket_path': '',
     'public_cert_path': '',
     'donation_url': config['Bot']['donation_url'] if 'donation_url' in config['Bot'] else 'n/a'
 }
@@ -81,13 +81,13 @@ if bot_config['update_method'] == 'webhook':
         raise ConfigError('Не задан webhook-хост')
     if 'webhook_port' not in config['Bot']:
         raise ConfigError('Не задан webhook-порт')
-    if 'local_port' not in config['Bot']:
-        raise ConfigError('Не задан порт локального хоста')
+    if 'socket_path' not in config['Bot']:
+        raise ConfigError('Не задан путь к сокету')
     if 'public_cert_path' not in config['Bot']:
         raise ConfigError('Не задан путь к публичному SSL-сертификату')
     bot_config['webhook_host'] = config['Bot']['webhook_host']
     bot_config['webhook_port'] = config['Bot']['webhook_port']
-    bot_config['local_port'] = int(config['Bot']['local_port'])
+    bot_config['socket_path'] = int(config['Bot']['socket_path'])
     bot_config['public_cert_path'] = config['Bot']['public_cert_path']
 
 proxy_config = {}

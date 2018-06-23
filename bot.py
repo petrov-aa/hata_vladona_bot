@@ -43,6 +43,6 @@ if __name__ == '__main__':
         web.run_app(
             app,
             host=listen,
-            port=bot_config['local_port']
+            path=bot_config['socket_path']
         )
 
