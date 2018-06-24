@@ -1,5 +1,6 @@
 from datetime import datetime
 from sqlalchemy.exc import DatabaseError
+from sqlalchemy.orm import Session
 
 from hata_vladona.config import config
 from hata_vladona.database import flush_session
@@ -8,14 +9,15 @@ from hata_vladona.models import Image, Gif, Camera, GIF_PAST_DAY, GIF_PAST_WEEK,
 gif_storage_path = config['Gif']['path']
 
 
-def get_latest_image(camera):
+@flush_session
+def get_latest_image(camera, session=None):
     """
 
+    :type session: Session
     :type camera: Camera
     :rtype: Image
     """
-    with flush_session() as session:
-        return session.query(Image).filter(Image.camera_id == camera.id).order_by(Image.date.desc()).first()
+    return session.query(Image).filter(Image.camera_id == camera.id).order_by(Image.date.desc()).first()
 
 
 def create_past_day_gif(camera):
@@ -45,43 +47,45 @@ def create_past_month_gif(camera):
     return __create_gif(camera, GIF_PAST_MONTH)
 
 
-def __create_gif(camera, gif_type):
+@flush_session
+def __create_gif(camera, gif_type, session=None):
     """
 
+    :type session: Session
     :type camera: Camera
     :type gif_type: str
     :rtype: Gif
     """
-    with flush_session() as session:
-        try:
-            now = datetime.now()
-            date = datetime(now.year, now.month, now.day)
-            gif = __check_if_gif_exists(camera, date, gif_type)
-            if gif is not None:
-                return gif
-            gif = Gif()
-            gif.camera = camera
-            gif.type = gif_type
-            gif.date = date
-            session.add(gif)
-        except DatabaseError:
-            return None
-        return gif
+    try:
+        now = datetime.now()
+        date = datetime(now.year, now.month, now.day)
+        gif = __check_if_gif_exists(camera, date, gif_type)
+        if gif is not None:
+            return gif
+        gif = Gif()
+        gif.camera = camera
+        gif.type = gif_type
+        gif.date = date
+        session.add(gif)
+    except DatabaseError:
+        return None
+    return gif
 
 
-def __check_if_gif_exists(camera, date, gif_type):
+@flush_session
+def __check_if_gif_exists(camera, date, gif_type, session=None):
     """
 
+    :type session: Session
     :rtype: Gif
     :type camera: Camera
     :type date: datetime
     :type gif_type: str
     """
-    with flush_session() as session:
-        camera = session.merge(camera)
-        return session.query(Gif).filter(Gif.camera_id == camera.id,
-                                         Gif.date == date,
-                                         Gif.type == gif_type).first()
+    camera = session.merge(camera)
+    return session.query(Gif).filter(Gif.camera_id == camera.id,
+                                     Gif.date == date,
+                                     Gif.type == gif_type).first()
 
 
 def get_past_day_gif(camera):

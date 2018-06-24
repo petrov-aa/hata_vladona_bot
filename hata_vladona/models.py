@@ -2,8 +2,10 @@ import os
 import shutil
 import subprocess
 from datetime import datetime, timedelta
+
+import telebot
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, desc
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Session
 
 from .config import gif_storage_config, image_storage_config
 from .database import flush_session, Base
@@ -46,46 +48,48 @@ class Image(Base):
                                                                      date.hour)
 
     @classmethod
-    def get_by_date(cls, camera, date):
+    @flush_session
+    def get_by_date(cls, camera, date, session=None):
         """
 
+        :type session: Session
         :type camera: Camera
         :param date: datetime
         :return:
         :rtype: Image
         """
-        with flush_session() as session:
-            image = session.query(cls).filter(cls.camera_id == camera.id,
-                                              cls.date == date).first()
-            return image
+        image = session.query(cls).filter(cls.camera_id == camera.id,
+                                          cls.date == date).first()
+        return image
 
     @classmethod
-    def get_today_images(cls, camera):
+    @flush_session
+    def get_today_images(cls, camera, session=None):
         """
 
+        :type session: Session
         :rtype: list
         :type camera: Camera
         """
-        with flush_session() as session:
-            now = datetime.now()
-            date_from = datetime(now.year, now.month, now.day).replace(hour=cls.hour_start)
-            if now.hour < cls.hour_start:
-                date_from = date_from - timedelta(days=1)
-            images = session.query(cls).\
-                filter(cls.camera_id == camera.id,
-                       cls.date >= date_from).all()
-            return images
+        now = datetime.now()
+        date_from = datetime(now.year, now.month, now.day).replace(hour=cls.hour_start)
+        if now.hour < cls.hour_start:
+            date_from = date_from - timedelta(days=1)
+        images = session.query(cls).\
+            filter(cls.camera_id == camera.id,
+                   cls.date >= date_from).all()
+        return images
 
     @classmethod
-    def get_first_image(cls, camera):
-        with flush_session() as session:
-            return session.query(Image).filter(Image.camera == camera).order_by(Image.date).first()
+    @flush_session
+    def get_first_image(cls, camera, session=None):
+        return session.query(Image).filter(Image.camera == camera).order_by(Image.date).first()
 
     @classmethod
-    def get_day_first_image(cls, camera, date):
-        with flush_session() as session:
-            return session.query(cls).filter(Image.camera == camera, Image.date >= date)\
-                .order_by(Image.date).first()
+    @flush_session
+    def get_day_first_image(cls, camera, date, session=None):
+        return session.query(cls).filter(Image.camera == camera, Image.date >= date)\
+            .order_by(Image.date).first()
 
 
 class Gif(Base):
@@ -232,15 +236,16 @@ class Chat(Base):
     messages = relationship('Message', cascade='all, delete-orphan')
 
     @staticmethod
-    def get_by_telegram_chat_id(telegram_chat_id):
+    @flush_session
+    def get_by_telegram_chat_id(telegram_chat_id, session=None):
         """
 
+        :type session: Session
         :rtype: Chat
         :type telegram_chat_id: int
         """
-        with flush_session() as session:
-            return session.query(Chat).\
-                filter(Chat.telegram_chat_id == telegram_chat_id).first()
+        return session.query(Chat).\
+            filter(Chat.telegram_chat_id == telegram_chat_id).first()
 
 
 class Camera(Base):

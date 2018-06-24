@@ -20,7 +20,7 @@ __Session = scoped_session(sessionmaker(bind=__engine))
 
 
 @contextmanager
-def flush_session():
+def get_flush_session():
     session = __Session()
     try:
         yield session
@@ -30,17 +30,32 @@ def flush_session():
         raise
 
 
+def flush_session(func):
+    def decorated(*args, **kwargs):
+        with get_flush_session() as session:
+            return func(*args, session=session, **kwargs)
+    return decorated
+
+
 @contextmanager
-def commit_session():
+def get_commit_session():
     session = __Session()
     try:
         yield session
         session.commit()
     except:
         session.rollback()
+        raise
     finally:
         session.close()
         __Session.remove()
+
+
+def commit_session(func):
+    def decorated(*args, **kwargs):
+        with get_commit_session() as session:
+            return func(*args, **kwargs, session=session)
+    return decorated
 
 
 Base = declarative_base()
