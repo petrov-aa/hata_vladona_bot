@@ -14,7 +14,7 @@ __engine_url.database = database_config['name']
 
 engine_url = str(__engine_url)
 
-__engine = create_engine(str(__engine_url) + '?charset=utf8')
+__engine = create_engine(str(__engine_url) + '?charset=utf8', pool_pre_ping=True)
 
 __Session = scoped_session(sessionmaker(bind=__engine))
 
