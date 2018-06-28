@@ -15,6 +15,7 @@ GIF_TODAY = 'today'
 GIF_PAST_DAY = 'past_day'
 GIF_PAST_WEEK = 'past_week'
 GIF_PAST_MONTH = 'past_month'
+GIF_FULL = 'full'
 
 CHAT_STATE_WAIT_TIME = 'wait_time'
 CHAT_STATE_WAIT_CAMERA = 'wait_camera'
@@ -134,11 +135,11 @@ class Gif(Base):
             os.makedirs(gif_dir)
 
     def create_file(self):
-        image_list_raw = self.get_image_list()
+        image_list = self.get_image_list()
         if self.type == GIF_PAST_MONTH:
-            image_list = image_list_raw[::4]
-        else:
-            image_list = image_list_raw
+            image_list = image_list[::5]
+        if self.type == GIF_FULL:
+            image_list = image_list[::int(len(image_list)/70)]
         index = 0
         self.create_gif_dir()
         Gif.remove_tmp_dir()
@@ -185,6 +186,8 @@ class Gif(Base):
             return date
         elif self.type == GIF_PAST_MONTH:
             return date - timedelta(days=30)
+        elif self.type == GIF_FULL:
+            return self.camera.start_date
         else:
             raise AttributeError('Неверный период времени')
 

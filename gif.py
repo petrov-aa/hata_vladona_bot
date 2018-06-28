@@ -18,3 +18,6 @@ if __name__ == '__main__':
 
             gif = export.create_past_month_gif(camera)
             gif.create_file()
+
+            gif = export.create_full_gif(camera)
+            gif.create_file()

@@ -85,7 +85,7 @@ def send_last_image(message, session=None):
     bot.send_photo(message.chat.id, photo)
 
 
-@bot.message_handler(commands=['yesterday', 'week', 'month'])
+@bot.message_handler(commands=['yesterday', 'week', 'month', 'full'])
 @commit_session
 def send_past_week_gif(message, session=None):
     chat = Chat.get_by_telegram_chat_id(message.chat.id)
@@ -99,6 +99,8 @@ def send_past_week_gif(message, session=None):
         gif = export.get_past_week_gif(camera)
     elif message.text.startswith('/month'):
         gif = export.get_past_month_gif(camera)
+    elif message.text.startswith('/full'):
+        gif = export.get_full_gif(camera)
     else:
         return
     gif_file_path = gif.get_file_path()

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from hata_vladona.config import config
 from hata_vladona.database import flush_session
-from hata_vladona.models import Image, Gif, Camera, GIF_PAST_DAY, GIF_PAST_WEEK, GIF_PAST_MONTH
+from hata_vladona.models import Image, Gif, Camera, GIF_PAST_DAY, GIF_PAST_WEEK, GIF_PAST_MONTH, GIF_FULL
 
 gif_storage_path = config['Gif']['path']
 
@@ -45,6 +45,15 @@ def create_past_month_gif(camera):
     :rtype: Gif
     """
     return __create_gif(camera, GIF_PAST_MONTH)
+
+
+def create_full_gif(camera):
+    """
+
+    :type camera: Camera
+    :rtype: Gif
+    """
+    return __create_gif(camera, GIF_FULL)
 
 
 @flush_session
@@ -119,6 +128,17 @@ def get_past_month_gif(camera):
     now = datetime.now()
     date = datetime(now.year, now.month, now.day)
     return __check_if_gif_exists(camera, date, GIF_PAST_MONTH)
+
+
+def get_full_gif(camera):
+    """
+
+    :type camera: Camera
+    :rtype: Gif
+    """
+    now = datetime.now()
+    date = datetime(now.year, now.month, now.day)
+    return __check_if_gif_exists(camera, date, GIF_FULL)
 
 
 def get_today_images(camera):
