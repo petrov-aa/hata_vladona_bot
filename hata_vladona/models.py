@@ -185,7 +185,10 @@ class Gif(Base):
                 return self.camera.start_date
             return date
         elif self.type == GIF_PAST_MONTH:
-            return date - timedelta(days=30)
+            date = date - timedelta(days=30)
+            if date < self.camera.start_date:
+                return self.camera.start_date
+            return date
         elif self.type == GIF_FULL:
             return self.camera.start_date
         else:
