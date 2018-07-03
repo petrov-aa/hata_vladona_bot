@@ -89,7 +89,9 @@ class Image(Base):
     @classmethod
     @flush_session
     def get_day_first_image(cls, camera, date, session=None):
-        return session.query(cls).filter(Image.camera == camera, Image.date >= date)\
+        return session.query(cls).filter(Image.camera == camera,
+                                         Image.date >= date,
+                                         Image.date <= datetime(date.year, date.month, date.day, Image.hour_end))\
             .order_by(Image.date).first()
 
 
