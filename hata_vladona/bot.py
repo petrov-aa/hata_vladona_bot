@@ -124,68 +124,6 @@ def send_past_week_gif(message, session=None):
         session.delete(msg)
         session.flush()
 
-#
-# @bot.message_handler(commands=['week'])
-# def send_past_week_gif(message):
-#     with commit_session() as session:
-#         chat = Chat.get_by_telegram_chat_id(message.chat.id)
-#         if chat is None:
-#             bot.send_message(message.chat.id, BOT_RESTART)
-#             return
-#         camera = chat.camera
-#         gif = export.get_past_week_gif(camera)
-#         gif_file_path = gif.get_file_path()
-#         if not os.path.exists(gif_file_path):
-#             bot.send_message(message.chat.id, BOT_ERROR_NO_GIF_FILE)
-#             return
-#         if gif.file_id:
-#             bot.send_document(message.chat.id, gif.file_id)
-#         else:
-#             msg = Message()
-#             result = bot.send_message(message.chat.id, BOT_VIDEO_UPLOAD)
-#             msg.telegram_message_id = result.message_id
-#             msg.gif = gif
-#             msg.chat = chat
-#             session.add(msg)
-#             session.flush()
-#             document = open(gif.get_file_path(), 'rb')
-#             result = bot.send_document(message.chat.id, document)
-#             gif.file_id = result.document.file_id
-#             bot.delete_message(msg.chat.telegram_chat_id, msg.telegram_message_id)
-#             session.delete(msg)
-#             session.flush()
-#
-#
-# @bot.message_handler(commands=['week'])
-# def send_past_week_gif(message):
-#     with commit_session() as session:
-#         chat = Chat.get_by_telegram_chat_id(message.chat.id)
-#         if chat is None:
-#             bot.send_message(message.chat.id, BOT_RESTART)
-#             return
-#         camera = chat.camera
-#         gif = export.get_past_week_gif(camera)
-#         gif_file_path = gif.get_file_path()
-#         if not os.path.exists(gif_file_path):
-#             bot.send_message(message.chat.id, BOT_ERROR_NO_GIF_FILE)
-#             return
-#         if gif.file_id:
-#             bot.send_document(message.chat.id, gif.file_id)
-#         else:
-#             msg = Message()
-#             result = bot.send_message(message.chat.id, BOT_VIDEO_UPLOAD)
-#             msg.telegram_message_id = result.message_id
-#             msg.gif = gif
-#             msg.chat = chat
-#             session.add(msg)
-#             session.flush()
-#             document = open(gif.get_file_path(), 'rb')
-#             result = bot.send_document(message.chat.id, document)
-#             gif.file_id = result.document.file_id
-#             bot.delete_message(msg.chat.telegram_chat_id, msg.telegram_message_id)
-#             session.delete(msg)
-#             session.flush()
-
 
 @bot.message_handler(commands=['today'])
 @commit_session
