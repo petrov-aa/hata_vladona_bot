@@ -1,3 +1,5 @@
+import os
+
 from configparser import ConfigParser
 
 
@@ -5,7 +7,9 @@ class ConfigError(Exception):
     pass
 
 
-config_file = './config.ini'
+if 'BOT_CONFIG_FILE' not in os.environ:
+    raise ConfigError("Не указан путь к файлу конфигурации")
+config_file = os.environ['BOT_CONFIG_FILE']
 
 config = ConfigParser()
 config.read(config_file)

@@ -18,10 +18,13 @@ services:
       dockerfile: docker/bot/Dockerfile
       context: .
     restart: on-failure
+    environment:
+      BOT_CONFIG_FILE: /app/config.ini
     depends_on:
       - mysql
     links:
       - mysql
     volumes:
-      - "./config.ini:/app/app/config.ini"
+      - "./app:/app/app"
+      - "./config.ini:/app/config.ini"
       - "./storage:/app/storage"
