@@ -1,0 +1,9 @@
+version: "3.1"
+
+services:
+  bot:
+    volumes:
+      - "./app:/app/app"
+#  fetch:
+#    volumes:
+#      - "./app:/app/app"

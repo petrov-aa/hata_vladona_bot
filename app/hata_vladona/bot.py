@@ -22,7 +22,9 @@ if bot_config['use_proxy']:
                                                       proxy_config['host'],
                                                       proxy_config['port'])}
 
-# logger.setLevel(logging.DEBUG)
+# Setup logger
+logger.setLevel(logging.DEBUG)
+logging.FileHandler("bot.log")
 
 
 bot = TeleBot(bot_config['token'])
@@ -37,7 +39,7 @@ def send_help(message, session=None):
     if chat is None:
         chat = Chat()
         chat.telegram_chat_id = message.chat.id
-        chat.camera_id = 3
+        chat.camera_id = 3  # todo убрать хардкод
         session.add(chat)
         session.flush()
     bot.send_message(message.chat.id,
@@ -81,6 +83,9 @@ def send_last_image(message, session=None):
         return
     camera = chat.camera
     image = export.get_latest_image(camera)
+    if image is None:
+        bot.send_message(message.chat.id, BOT_IMAGE_NOT_AVAILABLE)
+        return
     photo = open(image.get_file_path(), 'rb')
     bot.send_photo(message.chat.id, photo)
 
@@ -237,6 +242,7 @@ def process_message(message, session=None):
         else:
             first_image = Image.get_first_image(camera)
             if first_image is None:
+                bot.send_message(message.chat.id, BOT_IMAGE_NOT_AVAILABLE)
                 return
             if date < first_image.date:
                 bot.send_message(message.chat.id, BOT_IMAGE_AVAILABLE_FROM % (first_image.date.day,

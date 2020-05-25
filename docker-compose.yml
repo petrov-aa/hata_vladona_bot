@@ -1,0 +1,27 @@
+version: "3.1"
+
+services:
+  mysql:
+    image: petrovalexander/mysql-5.7-mb4:latest
+    volumes:
+      - "./docker/mysql/data:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    restart: on-failure
+    ports:
+      - "34060:3306"
+  bot:
+    build:
+      dockerfile: docker/bot/Dockerfile
+      context: .
+    restart: on-failure
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    volumes:
+      - "./config.ini:/app/app/config.ini"
+      - "./storage:/app/storage"

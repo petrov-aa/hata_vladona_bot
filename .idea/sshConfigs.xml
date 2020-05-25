@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="91.235.137.225" id="dd4ea3d1-1778-4567-840b-43e17398aeb5" port="22" customName="vds.sh hata_vladona" nameFormat="CUSTOM" username="hata_vladona" />
+      <sshConfig authType="PASSWORD" host="91.235.137.225" id="56e678e2-5e4f-4c78-84eb-d021fab58e0d" port="22" customName="vds.sh hata_vladona" nameFormat="CUSTOM" username="hata_vladona" />
+    </configs>
+  </component>
+</project>

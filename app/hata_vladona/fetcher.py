@@ -24,6 +24,8 @@ def __get_fetch_url(camera, date):
     :type date: datetime
     :rtype: str
     """
+    if camera.url_as_is:
+        return camera.url_base
     return camera.url_base % (date.year, date.month, date.day, date.hour)
 
 
@@ -74,7 +76,11 @@ def fetch_next(session=None):
 
             __make_storage_dirs(fetch_path)
 
-            urllib.request.urlretrieve(fetch_url, fetch_path)
+            if camera.is_mjpeg:
+                # todo как-то получить фрейм mjpeg и сохранить его в файл
+                raise Exception("Not implemented")
+            else:
+                urllib.request.urlretrieve(fetch_url, fetch_path)
 
             session.add(image)
 

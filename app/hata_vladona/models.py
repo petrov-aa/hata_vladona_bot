@@ -4,7 +4,7 @@ import subprocess
 from datetime import datetime, timedelta
 
 import telebot
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, desc
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, desc, Boolean
 from sqlalchemy.orm import relationship, Session
 
 from .config import gif_storage_config, image_storage_config
@@ -262,6 +262,8 @@ class Camera(Base):
     name = Column(String(50))
     url_base = Column(String(255))
     start_date = Column(DateTime)
+    url_as_is = Column(Boolean)
+    is_mjpeg = Column(Boolean)
     images = relationship('Image', cascade='all, delete-orphan')
     gifs = relationship('Gif', cascade='all, delete-orphan')
 
