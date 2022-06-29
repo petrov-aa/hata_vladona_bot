@@ -1,4 +1,4 @@
-BOT_START= """
+BOT_START = """
 Наблюдаем за стройкой квартиры %s в режиме онлайн
 
 /help - Список команд
@@ -10,7 +10,7 @@ Github - https://git.io/vpnaq
 Поддержать - /donate
 """
 
-BOT_HELP= """
+BOT_HELP = """
 Текущая камера *"%s"*
 
 /start - Начало работы
@@ -29,54 +29,62 @@ BOT_HELP= """
 
 """
 
-BOT_CANCEL= """
+BOT_CANCEL = """
 Отмена
 """
 
-BOT_RESTART= """
+BOT_RESTART = """
 Нажмите /start и повторите команду
 """
 
-BOT_NO_TODAY_IMAGES="""
+BOT_NO_TODAY_IMAGES = """
 Изображений за сегодня еще нет
 """
 
-BOT_CHOOSE_TIME="""
+BOT_CHOOSE_TIME = """
 Выберите время или нажмите /cancel для отмены
 """
 
-BOT_CHOOSE_TIME_FORMAT_ERROR="""
+BOT_CHOOSE_TIME_FORMAT_ERROR = """
 Ошибка: Неверный формат времени. Попробуйте другое время или нажмите /cancel для отмены
 """
 
-BOT_CHOOSE_TIME_NO_IMAGE_ERROR="""
+BOT_CHOOSE_TIME_NO_IMAGE_ERROR = """
 Ошибка: Изображение за это вермя отсутствует на сервере. Попробуйте другое время или нажмите /cancel для отмены
 """
 
-BOT_CHOOSE_CAMERA="""
+BOT_CHOOSE_CAMERA = """
 Выберите камеру или нажмите /cancel для отмены
 """
 
-BOT_CHOOSE_CAMERA_ERROR="""
+BOT_CHOOSE_CAMERA_ERROR = """
 Ошибка выбора камеры. Попробуйте еще раз или нажмите /cancel для отмены
 """
 
-BOT_CHOOSE_CAMERA_SUCCESS="""
+BOT_CHOOSE_CAMERA_SUCCESS = """
 Выбрана камера *"%s"*
 """
 
-BOT_VIDEO_UPLOAD="""
+BOT_VIDEO_UPLOAD = """
 Загружаю видео на сервер...
 """
 
-BOT_ERROR_NO_GIF_FILE="""
+BOT_ERROR_NO_GIF_FILE = """
 Ошибка: На сервере отсутвут файл с видео. Повторите попытку позже
 """
 
-BOT_IMAGE_AVAILABLE_FROM="""
+BOT_IMAGE_AVAILABLE_FROM = """
 Фото доступно только с %02d.%02d.%04d по настоящее время
 """
 
-BOT_IMAGE_NOT_AVAILABLE="""
+BOT_IMAGE_NOT_AVAILABLE_LAST = """
 Фото за данный момент времени отсутстует
+"""
+
+BOT_IMAGE_NOT_AVAILABLE = """
+Фото за данный момент времени (%02d.%02d.%04d %02d.%02d) отсутстует
+"""
+
+BOT_DATEPARSE_NOT_PARSED = """
+Не могу разобрать время. Введите либо дату в полном формате (например "03.03.2019") либо фразу (например "23 месяца назад")
 """

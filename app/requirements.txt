@@ -3,7 +3,7 @@ alembic==0.9.9
 async-timeout==2.0.1
 certifi==2018.4.16
 chardet==3.0.4
-dateparser==0.7.0
+dateparser==1.1.0
 idna==2.6
 idna-ssl==1.0.1
 Mako==1.0.7

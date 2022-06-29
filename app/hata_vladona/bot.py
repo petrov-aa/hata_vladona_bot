@@ -32,6 +32,13 @@ bot = TeleBot(bot_config['token'])
 time_pattern = re.compile('^([0-9]{2}):00$')
 
 
+def get_me():
+    return bot.get_me()
+
+
+me = get_me()
+
+
 @bot.message_handler(commands=['start'])
 @commit_session
 def send_help(message, session=None):
@@ -84,7 +91,7 @@ def send_last_image(message, session=None):
     camera = chat.camera
     image = export.get_latest_image(camera)
     if image is None:
-        bot.send_message(message.chat.id, BOT_IMAGE_NOT_AVAILABLE)
+        bot.send_message(message.chat.id, BOT_IMAGE_NOT_AVAILABLE_LAST)
         return
     photo = open(image.get_file_path(), 'rb')
     bot.send_photo(message.chat.id, photo)
@@ -180,6 +187,21 @@ def send_donation_link(message):
 @bot.message_handler(content_types=['text'])
 @commit_session
 def process_message(message, session=None):
+    # В чатах отвечаем только на реплаи или меншены бота в начале сообщения
+    if message.chat.type in ['group', 'supergroup']:
+        is_reply = message.reply_to_message is not None
+        if not is_reply:
+            is_mention = False
+            if message.entities is not None and len(message.entities) > 0:
+                for entity in message.entities:
+                    if entity.offset != 0 or entity.type != 'mention':
+                        continue
+                    if message.text[0:entity.length] == '@' + me.username:
+                        is_mention = True
+                        break
+            if not is_mention:
+                return
+
     chat = Chat.get_by_telegram_chat_id(message.chat.id)
     if chat is None:
         bot.send_message(message.chat.id, BOT_RESTART)
@@ -223,13 +245,26 @@ def process_message(message, session=None):
         if chat.state is not None:
             return
         text = message.text.strip()
-        parsed_date = dateparser.parse(text, languages=['ru', 'en'])
+        dateparser_settings = {
+            # отключаем ненужные парсеры
+            'PARSERS': ['relative-time', 'absolute-time'],
+            # нечего в будущем лишний раз что-то делать (фразы вроде "через 1 год" все равно будут работать)
+            'PREFER_DATES_FROM': 'past',
+            # Чтобы бот не пытался парсить простые числа типа 42 за 1942 год
+            'REQUIRE_PARTS': ['day', 'month', 'year'],
+            # Явно укажем DATE_ORDER хоть это и не обязательно для русского языка
+            'DATE_ORDER': 'DMY',
+            'PREFER_LOCALE_DATE_ORDER': False
+        }
+        parsed_date = dateparser.parse(text, languages=['ru'], settings=dateparser_settings)
         if parsed_date is None:
+            bot.send_message(message.chat.id, BOT_DATEPARSE_NOT_PARSED)
             return
         now = datetime.now()
         if parsed_date > now:
             bot.send_message(message.chat.id, ':(')
             return
+        # Оставляем только нужные компоненты даты
         date = datetime(parsed_date.year, parsed_date.month, parsed_date.day, parsed_date.hour)
         if Image.hour_start <= parsed_date.hour <= Image.hour_end:
             image = Image.get_by_date(camera, date)
@@ -242,11 +277,19 @@ def process_message(message, session=None):
         else:
             first_image = Image.get_first_image(camera)
             if first_image is None:
-                bot.send_message(message.chat.id, BOT_IMAGE_NOT_AVAILABLE)
+                bot.send_message(message.chat.id, BOT_IMAGE_NOT_AVAILABLE % (date.day,
+                                                                             date.month,
+                                                                             date.year,
+                                                                             date.hour,
+                                                                             date.minute))
                 return
             if date < first_image.date:
                 bot.send_message(message.chat.id, BOT_IMAGE_AVAILABLE_FROM % (first_image.date.day,
                                                                               first_image.date.month,
                                                                               first_image.date.year))
             else:
-                bot.send_message(message.chat.id, BOT_IMAGE_NOT_AVAILABLE)
+                bot.send_message(message.chat.id, BOT_IMAGE_NOT_AVAILABLE % (date.day,
+                                                                             date.month,
+                                                                             date.year,
+                                                                             date.hour,
+                                                                             date.minute))
