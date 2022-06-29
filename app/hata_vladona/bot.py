@@ -189,18 +189,17 @@ def send_donation_link(message):
 def process_message(message, session=None):
     # В чатах отвечаем только на реплаи или меншены бота в начале сообщения
     if message.chat.type in ['group', 'supergroup']:
-        is_reply = message.reply_to_message is not None
-        if not is_reply:
-            is_mention = False
-            if message.entities is not None and len(message.entities) > 0:
-                for entity in message.entities:
-                    if entity.offset != 0 or entity.type != 'mention':
-                        continue
-                    if message.text[0:entity.length] == '@' + me.username:
-                        is_mention = True
-                        break
-            if not is_mention:
-                return
+        is_reply = message.reply_to_message is not None and message.reply_to_message.from_user.id == me.id
+        is_mention = False
+        if message.entities is not None and len(message.entities) > 0:
+            for entity in message.entities:
+                if entity.offset != 0 or entity.type != 'mention':
+                    continue
+                if message.text[0:entity.length] == '@' + me.username:
+                    is_mention = True
+                    break
+        if not is_reply and not is_mention:
+            return
 
     chat = Chat.get_by_telegram_chat_id(message.chat.id)
     if chat is None:
