@@ -26,7 +26,8 @@ def __get_fetch_url(camera, date):
     """
     if camera.url_as_is:
         return camera.url_base
-    return camera.url_base % (date.year, date.month, date.day, date.hour)
+    # -1 взят с прода
+    return camera.url_base % (date.year, date.month, date.day, date.hour-1)
 
 
 @flush_session
