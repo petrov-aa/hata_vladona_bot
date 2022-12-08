@@ -1,7 +1,7 @@
 aiohttp==2.3.10
 alembic==0.9.9
 async-timeout==2.0.1
-certifi==2018.4.16
+certifi==2022.12.7
 chardet==3.0.4
 dateparser==1.1.0
 idna==2.6
